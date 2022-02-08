@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_my_hand/consts.dart';
+import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart' as admin;
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
-import 'package:hold_my_hand/presentation/admin_screen.dart';
+import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
+import 'package:hold_my_hand/presentation/benefector.dart';
+import 'package:hold_my_hand/presentation/disabled_person.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -16,6 +19,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   double signInWidth = 0.1;
   double signUpWidth = 0.9;
   List<bool> accountType = List.generate(2, (index) => false);
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController disability = TextEditingController();
+  TextEditingController signInEmail = TextEditingController();
+  TextEditingController signInPassword = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +56,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return signInWidget(size);
             });
       }, listener: (context, state) async {
-        if (state is ErrorState) {
+        if (state is SignedIn) {
+          if (state.accountType == "admin") {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => BlocProvider(
+                          create: (_) => admin.AdminBloc(),
+                          child: const AdminScreen(),
+                        )));
+          } else if (state.accountType == "disabled person") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DisabledPerson()));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const BenefectorScreen()));
+          }
+        } else if (state is SignedIn) {
+          if (state.accountType == "benefector") {
+            print("benefector");
+          }
+        } else if (state is ErrorState) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.message)));
         }
@@ -51,8 +89,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   SingleChildScrollView signInWidget(Size size) {
-    TextEditingController email = TextEditingController();
-    TextEditingController password = TextEditingController();
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -111,14 +147,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             child: TextFormField(
-                              controller: email,
+                              controller: signInEmail,
                               validator: validateEmail,
                               decoration:
                                   const InputDecoration(label: Text("Email")),
                             ),
                           ),
                           TextField(
-                            controller: password,
+                            controller: signInPassword,
                             decoration: const InputDecoration(
                               label: Text("Password"),
                             ),
@@ -126,12 +162,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              if (password.text.isNotEmpty &&
-                                  email.text.isNotEmpty) {
-                                if (password.text == adminPassword &&
-                                    email.text == adminEmail) {
-                                  Navigator.pushReplacement(
-                                      context, MaterialPageRoute(builder: (context)=>const AdminScreen()));
+                              if (signInPassword.text.isNotEmpty &&
+                                  signInEmail.text.isNotEmpty) {
+                                if (signInPassword.text == adminPassword &&
+                                    signInEmail.text == adminEmail) {
+                                  BlocProvider.of<RegisterationBloc>(context)
+                                      .add(SignInAdmin(
+                                          email: adminEmail,
+                                          password: adminPassword));
                                 }
                               }
                             },
@@ -157,11 +195,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   SingleChildScrollView signUpWidget(Size size) {
-    TextEditingController email = TextEditingController();
-    TextEditingController password = TextEditingController();
-    TextEditingController firstName = TextEditingController();
-    TextEditingController lastName = TextEditingController();
-    TextEditingController disability = TextEditingController();
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -243,6 +276,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           for (int i = 0; i <= 1; i++) {
                             accountType[i] = false;
                           }
+                          print(index);
                           accountType[index] = true;
                           setState(() {});
                         },
@@ -292,20 +326,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextButton(
                         onPressed: () {
                           if (email.text.isNotEmpty &&
-                                  password.text.isNotEmpty &&
-                                  lastName.text.isNotEmpty &&
-                                  firstName.text.isNotEmpty &&
-                                  accountType.contains(true) &&
-                                  accountType.indexWhere(
+                              password.text.isNotEmpty &&
+                              lastName.text.isNotEmpty &&
+                              firstName.text.isNotEmpty &&
+                              accountType.contains(true)) {
+                            if (accountType
+                                    .indexWhere((element) => element == true) ==
+                                1) {
+                              if (disability.text.isNotEmpty) {
+                                BlocProvider.of<RegisterationBloc>(context)
+                                    .add(SignUp(
+                                  fName: firstName.text,
+                                  lName: lastName.text,
+                                  disabilityType: disability.text,
+                                  email: "email",
+                                  password: "password",
+                                  accountType: accountType.indexWhere(
+                                              (element) => element == true) ==
+                                          1
+                                      ? "disabled person"
+                                      : "benefector",
+                                ));
+                              }else{
+                                 ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("please fill all fields")));
+                              }
+                            }else{
+ BlocProvider.of<RegisterationBloc>(context)
+                                .add(SignUp(
+                              fName: firstName.text,
+                              lName: lastName.text,
+                              disabilityType: accountType.indexWhere(
                                           (element) => element == true) ==
                                       1
-                              ? disability.text.isNotEmpty
-                              : false) {
-                            BlocProvider.of<RegisterationBloc>(context).add(
-                                SignUp(
-                                    email: "email",
-                                    password: "password",
-                                    state: "0"));
+                                  ? disability.text
+                                  : null,
+                              email: "email",
+                              password: "password",
+                              accountType: accountType.indexWhere(
+                                          (element) => element == true) ==
+                                      1
+                                  ? "disabled person"
+                                  : "benefector",
+                            ));
+                            }
+                           
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

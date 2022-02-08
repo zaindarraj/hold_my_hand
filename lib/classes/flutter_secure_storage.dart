@@ -16,15 +16,16 @@ class SecureStorage {
     await flutterSecureStorage.write(key: "password", value: password);
     await flutterSecureStorage.write(key: "isLoggedOut", value: state);
   }
- Future<void> setState(String state) async {
+
+  Future<void> setState(String state) async {
     await flutterSecureStorage.write(key: "isLoggedOut", value: state);
   }
 
-   Future<void> setEmail(String email) async {
+  Future<void> setEmail(String email) async {
     await flutterSecureStorage.write(key: "email", value: email);
-    
   }
-   Future<void> setPassword(String password) async {
+
+  Future<void> setPassword(String password) async {
     await flutterSecureStorage.write(key: "password", value: password);
   }
 
@@ -44,8 +45,6 @@ class SecureStorage {
       return true;
     }
   }
-
-  
 
   Future<Map<String, String>> get() async {
     map = await flutterSecureStorage.readAll();

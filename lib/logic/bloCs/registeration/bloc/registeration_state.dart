@@ -4,12 +4,14 @@ abstract class RegisterationState {}
 
 class RegisterationInitial extends RegisterationState {}
 
-
-
-
 class Loading extends RegisterationState {}
 
-class SignedIn extends RegisterationState {}
+class Done extends RegisterationState {}
+
+class SignedIn extends RegisterationState {
+  String? accountType;
+  SignedIn({this.accountType});
+}
 
 
 class ErrorState extends RegisterationState {

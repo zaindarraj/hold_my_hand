@@ -8,15 +8,25 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({ Key? key }) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home : BlocProvider(
-        create: (context) => RegisterationBloc()..add(CheckFlutterStorage())..add(CheckBio()),
-        child:const RegisterScreen(),
-      )
+    return BlocProvider(
+      create: (context) => RegisterationBloc()..add(CheckBio())
+          ..add(CheckFlutterStorage())
+          ,
+      child: MaterialApp(
+        theme: ThemeData(
+              primaryColor: Colors.blue[800] as Color,
+              iconTheme: const IconThemeData(color: Colors.white)),
+        home: BlocProvider(
+            create: (context) => RegisterationBloc()
+              ..add(CheckFlutterStorage())
+              ..add(CheckBio()),
+            child: const RegisterScreen(),
+          ),
+      ),
     );
   }
 }
