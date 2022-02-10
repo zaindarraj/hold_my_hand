@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
+import 'package:hold_my_hand/presentation/admin%20screens/add_benefector.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/adding_user.dart'
     as widget;
+import 'package:hold_my_hand/presentation/admin%20screens/approve_user.dart';
+import 'package:hold_my_hand/presentation/admin%20screens/delete_benefector.dart';
+import 'package:hold_my_hand/presentation/admin%20screens/delete_user.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -191,7 +195,13 @@ class _AdminScreenState extends State<AdminScreen> {
               ))),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => BlocProvider(create: (_)=> AdminBloc(),
+                    child: const DeleteUserScreen(),)));
+          },
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -207,7 +217,13 @@ class _AdminScreenState extends State<AdminScreen> {
               ))),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => BlocProvider(create: (_)=> AdminBloc(),
+                    child:const AddBenefectorScreen(),)));
+          },
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -223,7 +239,11 @@ class _AdminScreenState extends State<AdminScreen> {
               ))),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => BlocProvider(create: (_)=> AdminBloc(),
+                    child: const DeleteBenefectorScreen(),)));},
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -239,7 +259,13 @@ class _AdminScreenState extends State<AdminScreen> {
               ))),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => BlocProvider(create: (_)=> AdminBloc()..add(GetUsersList()),
+                    child: const ApproveUserScreen(),)));
+          },
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),

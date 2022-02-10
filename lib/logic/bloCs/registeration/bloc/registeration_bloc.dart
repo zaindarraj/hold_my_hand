@@ -2,8 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:hold_my_hand/classes/api.dart';
 import 'package:hold_my_hand/classes/flutter_secure_storage.dart';
 import 'package:hold_my_hand/classes/local_auth.dart';
+
+import '../../../../consts.dart';
 part 'registeration_state.dart';
 part 'registeration_event.dart';
+
 class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
   SecureStorage flutterSecureStorage = SecureStorage();
   LocalAuth localAuthentication = LocalAuth();
@@ -19,10 +22,7 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
       } else if (event is SignUp) {
         emit(Loading());
         String? response;
-     
-      
-      
-      
+
         if (event.accountType == 'disabled person') {
           response = await API.signUpUser(event.email, event.password,
               event.fName, event.lName, event.disabilityType as String);
@@ -35,7 +35,7 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           );
         }
 
-        if (response == signedUpResponse) {
+        if (response == oK) {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
           emit(SignedIn());
         } else {
@@ -96,6 +96,7 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
         dynamic response = await API.signIn(event.email, event.password);
         if (response is String) {
         } else {
+          await flutterSecureStorage.setAll(event.email, event.password, "0");
           emit(SignedIn(accountType: response["accountType"]));
         }
       }

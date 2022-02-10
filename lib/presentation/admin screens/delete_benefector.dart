@@ -4,14 +4,14 @@ import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart';
 
 import '../../methods.dart';
 
-class DeleteUserScreen extends StatefulWidget {
-  const DeleteUserScreen({Key? key}) : super(key: key);
+class DeleteBenefectorScreen extends StatefulWidget {
+  const DeleteBenefectorScreen({Key? key}) : super(key: key);
 
   @override
-  _DeleteUserScreenState createState() => _DeleteUserScreenState();
+  _DeleteBenefectorScreenState createState() => _DeleteBenefectorScreenState();
 }
 
-class _DeleteUserScreenState extends State<DeleteUserScreen> {
+class _DeleteBenefectorScreenState extends State<DeleteBenefectorScreen> {
     TextEditingController email = TextEditingController();
 
   @override
@@ -87,7 +87,7 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
                             }
                           },
                           child: Text(
-                            "Add User",
+                            "Delete User",
                             style: TextStyle(
                               color: Colors.blue[800] as Color,
                             ),

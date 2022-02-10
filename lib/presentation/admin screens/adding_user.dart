@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart';
-import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart' as reg;
 
 import '../../methods.dart';
 

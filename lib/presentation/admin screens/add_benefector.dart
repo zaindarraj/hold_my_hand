@@ -4,21 +4,57 @@ import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart';
 
 import '../../methods.dart';
 
-class DeleteUserScreen extends StatefulWidget {
-  const DeleteUserScreen({Key? key}) : super(key: key);
+class AddBenefectorScreen extends StatefulWidget {
+  const AddBenefectorScreen({Key? key}) : super(key: key);
 
   @override
-  _DeleteUserScreenState createState() => _DeleteUserScreenState();
+  _AddBenefectorScreenState createState() => _AddBenefectorScreenState();
 }
 
-class _DeleteUserScreenState extends State<DeleteUserScreen> {
-    TextEditingController email = TextEditingController();
-
+class _AddBenefectorScreenState extends State<AddBenefectorScreen> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
+        body:  Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Colors.blue[800] as Color,
+          Colors.blue[600] as Color
+        ])),
+          child: BlocConsumer<AdminBloc,AdminState>(
+              builder: (context, state) {
+                if (state is Done) {
+                  return  Center(
+                    child: Container(
+                      width: size.width*0.5,
+                      height: size.height*0.3,
+                       decoration: BoxDecoration(
+              color: Colors.white,borderRadius: BorderRadius.circular(20)),
+              child: const Center(child:  Text("All Done")),),
+                  );
+                } else if (state is Loading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is Error) {
+                  return Center(
+                    child: Text(state.error),
+                  );
+                }
+                return body(size, context);
+              },
+              listener: (context, state) {}),
+        ));
+  }
+
+  SingleChildScrollView body(Size size, BuildContext context) {
+    return SingleChildScrollView(
+      
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,7 +73,7 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Delete a User",
+                    const Text("Add a User",
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -73,13 +109,39 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
                               const InputDecoration(label: Text("Email")),
                         ),
                       ),
-                     
+                      TextField(
+                        controller: password,
+                        decoration: const InputDecoration(
+                          label: Text("Password"),
+                        ),
+                        obscureText: true,
+                      ),
+                      TextField(
+                        controller: firstName,
+                        decoration: const InputDecoration(
+                          label: Text("First Name"),
+                        ),
+                      ),
+                      TextField(
+                        controller: lastName,
+                        decoration: const InputDecoration(
+                          label: Text("Last Name"),
+                        ),
+                      ),
+                    
                       TextButton(
                           onPressed: () {
-                            if (email.text.isNotEmpty 
-                              ) {
+                            if (email.text.isNotEmpty &&
+                                password.text.isNotEmpty &&
+                                lastName.text.isNotEmpty &&
+                                firstName.text.isNotEmpty) {
                               BlocProvider.of<AdminBloc>(context).add(
-                                  DeleteUser(email: email.text));
+                                  AddBenefector(
+                                      fname: firstName.text,
+                                      lnamel: lastName.text,
+                                      email: email.text,
+                                      password: password.text,
+                                    ));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -99,7 +161,7 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
             )
           ],
         ),
-      ),
+      
     );
   }
 }

@@ -66,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: const AdminScreen(),
                         )));
           } else if (state.accountType == "disabled person") {
-            Navigator.push(
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const DisabledPerson()));
@@ -168,6 +168,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     signInEmail.text == adminEmail) {
                                   BlocProvider.of<RegisterationBloc>(context)
                                       .add(SignInAdmin(
+                                          email: adminEmail,
+                                          password: adminPassword));
+                                }else {
+                                   BlocProvider.of<RegisterationBloc>(context)
+                                      .add(SignIn(
                                           email: adminEmail,
                                           password: adminPassword));
                                 }
