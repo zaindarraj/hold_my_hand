@@ -18,6 +18,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
           emit(Error(error: response));
         }
       } else if (event is DeleteUser) {
+        emit(Loading());
         String response = await API.deleteUser(event.email);
         if (response == oK) {
           emit(Done());
@@ -25,22 +26,33 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
           emit(Error(error: response));
         }
       } else if (event is GetUsersList) {
+        emit(Loading());
         dynamic response = await API.getUsersList();
         if (response == noUsers) {
           emit(NoUsers());
         } else if (response == serverError) {
           emit(Error(error: response));
+        } else {
+          emit(UserListReady(listOfUser: response));
         }
-        emit(UserListReady(listOfUser: response));
       } else if (event is ApproveUser) {
+        emit(Loading());
         dynamic response = await API.approveUser(event.email);
         if (response == oK) {
           emit(Done());
         } else {
           emit(Error(error: response["message"]));
         }
-      }else if(event is GetBenefectorList){
+      } else if (event is GetBenefectorList) {
+        emit(Loading());
         dynamic response = await API.getUsersList();
+      } else if (event is DeleteBenefector) {
+        String response = await API.deleteBenefector(event.email);
+        if (response == oK) {
+          emit(Done());
+        } else {
+          emit(Error(error: response));
+        }
       }
     });
   }

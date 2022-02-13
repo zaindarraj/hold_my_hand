@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 
-class DisabledPerson extends StatefulWidget {
-  const DisabledPerson({ Key? key }) : super(key: key);
+class DisabledPersonScreen extends StatefulWidget {
+  const DisabledPersonScreen({ Key? key }) : super(key: key);
 
   @override
-  _DisabledPersonState createState() => _DisabledPersonState();
+  _DisabledPersonScreenState createState() => _DisabledPersonScreenState();
 }
 
-class _DisabledPersonState extends State<DisabledPerson> {
+class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

@@ -15,13 +15,14 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
     on<RegisterationEvent>((event, emit) async {
       if (event is SignOut) {
         await flutterSecureStorage.setState("1");
+        emit(RegisterationInitial());
       } else if (event is SignInAdmin) {
         emit(Loading());
         await flutterSecureStorage.setAll(event.email, event.password, "0");
-        emit(SignedIn(accountType: "admin"));
+        emit(Admin());
       } else if (event is SignUp) {
         emit(Loading());
-        String? response;
+        dynamic response;
 
         if (event.accountType == 'disabled person') {
           response = await API.signUpUser(event.email, event.password,
@@ -35,9 +36,9 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           );
         }
 
-        if (response == oK) {
+        if (response["code"] == "1") {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          emit(SignedIn());
+          emit(User(data: response["data"]));
         } else {
           emit(ErrorState(message: response));
         }
@@ -51,13 +52,21 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
                 if (map["email"] == adminEmail &&
                     map["password"] == adminPassword) {
                   flutterSecureStorage.setState("0");
-                  emit(SignedIn(accountType: "admin"));
+                  emit(Admin());
                 } else {
                   dynamic response = await API.signIn(
                       map["email"] as String, map["password"] as String);
 
                   if (response is Map) {
-                    emit(SignedIn(accountType: response["accountType"]));
+                    Map<String, dynamic> data = response["data"];
+                    await flutterSecureStorage.setAll(
+                        data["email"], data["password"], "0");
+                    String accountType = response["code"];
+                    if (accountType == "1") {
+                      emit(User(data: response["data"]));
+                    } else if (accountType == "2") {
+                      emit(Benefector(data: response["data"]));
+                    }
                   } else {
                     emit(ErrorState(message: response));
                   }
@@ -73,17 +82,24 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
         } else {
           Map<String, String> map = await flutterSecureStorage.get();
           if (!await flutterSecureStorage.isLoggedOut()) {
+            print(map);
             if (map["email"] == adminEmail &&
                 map["password"] == adminPassword) {
               if (map["isLoggedOut"] == "0") {
-                emit(SignedIn(accountType: "admin"));
+                emit(Admin());
               }
             } else {
               dynamic response = await API.signIn(
                   map["email"] as String, map["password"] as String);
 
               if (response is Map) {
-                emit(SignedIn(accountType: response["accountType"]));
+                await flutterSecureStorage.setState("0");
+                String accountType = response["code"];
+                if (accountType == "1") {
+                  emit(User(data: response["data"]));
+                } else if (accountType == "2") {
+                  emit(Benefector(data: response["data"]));
+                }
               } else {
                 emit(ErrorState(message: response));
               }
@@ -93,11 +109,18 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           }
         }
       } else if (event is SignIn) {
+        emit(Loading());
         dynamic response = await API.signIn(event.email, event.password);
         if (response is String) {
+          emit(ErrorState(message: response));
         } else {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          emit(SignedIn(accountType: response["accountType"]));
+          String accountType = response["code"];
+          if (accountType == "1") {
+            emit(User(data: response["data"]));
+          } else if (accountType == "2") {
+            emit(Benefector(data: response["data"]));
+          }
         }
       }
     });

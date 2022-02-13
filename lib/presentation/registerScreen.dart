@@ -56,30 +56,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return signInWidget(size);
             });
       }, listener: (context, state) async {
-        if (state is SignedIn) {
-          if (state.accountType == "admin") {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => BlocProvider(
-                          create: (_) => admin.AdminBloc(),
-                          child: const AdminScreen(),
-                        )));
-          } else if (state.accountType == "disabled person") {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const DisabledPerson()));
-          } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BenefectorScreen()));
-          }
-        } else if (state is SignedIn) {
-          if (state.accountType == "benefector") {
-            print("benefector");
-          }
+        if (state is User) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const DisabledPersonScreen()));
+        } else if (state is Benefector) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const BenefectorScreen()));
+        } else if (state is Admin) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                        create: (_) => admin.AdminBloc(),
+                        child: const AdminScreen(),
+                      )));
         } else if (state is ErrorState) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.message)));
@@ -170,11 +164,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       .add(SignInAdmin(
                                           email: adminEmail,
                                           password: adminPassword));
-                                }else {
-                                   BlocProvider.of<RegisterationBloc>(context)
+                                } else {
+                                  BlocProvider.of<RegisterationBloc>(context)
                                       .add(SignIn(
-                                          email: adminEmail,
-                                          password: adminPassword));
+                                          email: signInEmail.text,
+                                          password: signInPassword.text));
                                 }
                               }
                             },
@@ -292,6 +286,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 child: Text(
                               "Benefector",
                               style: TextStyle(
+                                fontSize:
+                                    MediaQuery.textScaleFactorOf(context) * 12,
                                 color: Colors.blue[800] as Color,
                               ),
                             )),
@@ -305,12 +301,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Text(
                                     "Disabled",
                                     style: TextStyle(
+                                      fontSize: MediaQuery.textScaleFactorOf(
+                                              context) *
+                                          12,
                                       color: Colors.blue[800] as Color,
                                     ),
                                   ),
                                   Text(
                                     "Person",
                                     style: TextStyle(
+                                      fontSize: MediaQuery.textScaleFactorOf(
+                                              context) *
+                                          12,
                                       color: Colors.blue[800] as Color,
                                     ),
                                   ),
@@ -352,31 +354,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       ? "disabled person"
                                       : "benefector",
                                 ));
-                              }else{
-                                 ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("please fill all fields")));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text("please fill all fields")));
                               }
-                            }else{
- BlocProvider.of<RegisterationBloc>(context)
-                                .add(SignUp(
-                              fName: firstName.text,
-                              lName: lastName.text,
-                              disabilityType: accountType.indexWhere(
-                                          (element) => element == true) ==
-                                      1
-                                  ? disability.text
-                                  : null,
-                              email: "email",
-                              password: "password",
-                              accountType: accountType.indexWhere(
-                                          (element) => element == true) ==
-                                      1
-                                  ? "disabled person"
-                                  : "benefector",
-                            ));
+                            } else {
+                              BlocProvider.of<RegisterationBloc>(context)
+                                  .add(SignUp(
+                                fName: firstName.text,
+                                lName: lastName.text,
+                                disabilityType: accountType.indexWhere(
+                                            (element) => element == true) ==
+                                        1
+                                    ? disability.text
+                                    : null,
+                                email: "email",
+                                password: "password",
+                                accountType: accountType.indexWhere(
+                                            (element) => element == true) ==
+                                        1
+                                    ? "disabled person"
+                                    : "benefector",
+                              ));
                             }
-                           
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

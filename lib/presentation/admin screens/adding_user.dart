@@ -42,14 +42,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is Error) {
-                  return Center(
-                    child: Text(state.error),
-                  );
-                }
+                } 
                 return body(size, context);
               },
-              listener: (context, state) {}),
+              listener: (context, state) { if (state is Error) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
+                }}),
         ));
   }
 
