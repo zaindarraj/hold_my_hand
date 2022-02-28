@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_my_hand/consts.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart' as admin;
+import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
 import 'package:hold_my_hand/presentation/benefector.dart';
-import 'package:hold_my_hand/presentation/disabled_person.dart';
+import 'package:hold_my_hand/presentation/disabled%20person%20screens/disabled_person.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -60,7 +61,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => const DisabledPersonScreen()));
+                  builder: (context) => BlocProvider(
+                        create: (context) => DisabledPersonBloc(data: state.data),
+                        child: const DisabledPersonScreen(),
+                      )));
         } else if (state is Benefector) {
           Navigator.pushReplacement(
               context,
@@ -250,12 +254,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: const InputDecoration(label: Text("Email")),
                       ),
                     ),
-                    TextField(
-                      controller: password,
-                      decoration: const InputDecoration(
-                        label: Text("Password"),
+                    Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        validator: isNumeric,
+                        controller: password,
+                        decoration: const InputDecoration(
+                          label: Text("Password"),
+                        ),
+                        obscureText: true,
                       ),
-                      obscureText: true,
                     ),
                     TextField(
                       controller: firstName,
@@ -336,7 +344,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               password.text.isNotEmpty &&
                               lastName.text.isNotEmpty &&
                               firstName.text.isNotEmpty &&
-                              accountType.contains(true)) {
+                              accountType.contains(true)&& validateEmail(email.text)==null && isNumeric(password.text) ==null) {
                             if (accountType
                                     .indexWhere((element) => element == true) ==
                                 1) {
@@ -358,7 +366,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
-                                            Text("please fill all fields")));
+                                            Text("please make sure you entered all the fields")));
                               }
                             } else {
                               BlocProvider.of<RegisterationBloc>(context)

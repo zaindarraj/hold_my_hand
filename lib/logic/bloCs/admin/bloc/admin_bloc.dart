@@ -35,19 +35,33 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         } else {
           emit(UserListReady(listOfUser: response));
         }
-      } else if (event is ApproveUser) {
-        emit(Loading());
-        dynamic response = await API.approveUser(event.email);
-        if (response == oK) {
-          emit(Done());
-        } else {
-          emit(Error(error: response["message"]));
-        }
       } else if (event is GetBenefectorList) {
         emit(Loading());
         dynamic response = await API.getUsersList();
+        if (response == noUsers) {
+          emit(NoUsers());
+        } else if (response == serverError) {
+          emit(Error(error: response));
+        } else if(response.runtimeType is List<Map<dynamic, dynamic>>){
+          emit(BenefectorListReady(list: response));
+        }
       } else if (event is DeleteBenefector) {
         String response = await API.deleteBenefector(event.email);
+        if (response == oK) {
+          emit(Done());
+        } else {
+          emit(Error(error: response));
+        }
+      } else if (event is ApproveUser) {
+        emit(Loading());
+        dynamic response = await API.approve(event.email, "disabled person");
+        if (response == oK) {
+          emit(Done());
+        } else {
+          emit(Error(error: response));
+        }
+      } else if (event is ApproveBenefector) {
+        dynamic response = await API.approve(event.email, "benefector");
         if (response == oK) {
           emit(Done());
         } else {

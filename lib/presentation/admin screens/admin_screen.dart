@@ -5,6 +5,7 @@ import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.d
 import 'package:hold_my_hand/presentation/admin%20screens/add_benefector.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/adding_user.dart'
     as widget;
+import 'package:hold_my_hand/presentation/admin%20screens/approve_benefector.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/approve_user.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/delete_benefector.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/delete_user.dart';
@@ -281,7 +282,13 @@ class _AdminScreenState extends State<AdminScreen> {
               ))),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+             Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => BlocProvider(create: (_)=> AdminBloc()..add(GetUsersList()),
+                    child: const ApproveBenefectorScreen(),)));
+          },
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),

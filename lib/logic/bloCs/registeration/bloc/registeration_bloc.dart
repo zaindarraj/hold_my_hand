@@ -23,7 +23,6 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
       } else if (event is SignUp) {
         emit(Loading());
         dynamic response;
-
         if (event.accountType == 'disabled person') {
           response = await API.signUpUser(event.email, event.password,
               event.fName, event.lName, event.disabilityType as String);
@@ -35,11 +34,11 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
             event.lName,
           );
         }
-
-        if (response["code"] == "1") {
+        if(response.runtimeType != String){
           await flutterSecureStorage.setAll(event.email, event.password, "0");
           emit(User(data: response["data"]));
-        } else {
+        }
+         else {
           emit(ErrorState(message: response));
         }
       } else if (event is CheckBio) {
@@ -82,7 +81,6 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
         } else {
           Map<String, String> map = await flutterSecureStorage.get();
           if (!await flutterSecureStorage.isLoggedOut()) {
-            print(map);
             if (map["email"] == adminEmail &&
                 map["password"] == adminPassword) {
               if (map["isLoggedOut"] == "0") {
