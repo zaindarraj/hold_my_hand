@@ -4,10 +4,14 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 class SpeechToText {
   stt.SpeechToText _speechToText = stt.SpeechToText();
   bool _speechEnabled = false;
-  String _lastWords = '';
+  String lastWords = '';
 
   void initSpeech() async {
-    _speechEnabled = await _speechToText.listen(onResult: _onSpeechResult);
+    try {
+      _speechEnabled = await _speechToText.listen(onResult: _onSpeechResult);
+    } on  stt.SpeechToTextNotInitializedException catch (e) {
+      print(e.toString());
+    }
   }
 
   /// Each time to start a speech recognition session
@@ -26,6 +30,7 @@ class SpeechToText {
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
   void _onSpeechResult(SpeechRecognitionResult result) {
-    _lastWords = result.recognizedWords;
+    lastWords = result.recognizedWords;
+    print(lastWords);
   }
 }

@@ -8,5 +8,6 @@ class OrderFood extends OrderFoodEvent {
   String password;
   List<String> order;
   OrderFood(
-      {required this.cardID, required this.email, required this.password, required this.order});
+      {required this.cardID, required this.email, required this.password,
+       required this.order});
 }

@@ -8,6 +8,7 @@ import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.d
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chat_bot.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chatting.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/order_food.dart';
+import 'package:hold_my_hand/presentation/disabled%20person%20screens/voice_command.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
 class DisabledPersonScreen extends StatefulWidget {
@@ -116,7 +117,8 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
             backgroundColor: Theme.of(context).primaryColor,
             child: const Icon(Icons.logout),
             onPressed: () {
-              BlocProvider.of<RegisterationBloc>(context).add(SignOut());
+              //BlocProvider.of<RegisterationBloc>(context).add(SignOut());
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const VoiceCommand()));
             },
           ),
           body: Container(
@@ -192,7 +194,7 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                 MaterialPageRoute(
                     builder: (_) => BlocProvider(
                           create: (context) => OrderFoodBloc(),
-                          child:const OrderFoodScreen(),
+                          child: const OrderFoodScreen(),
                         )));
           },
           child: Container(

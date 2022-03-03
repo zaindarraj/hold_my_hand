@@ -13,9 +13,6 @@ class SendMessage extends ChatEvent {
 }
 
 
-
-
-
 class ReadMessages extends ChatEvent {
   String senderID;
   String receiverID;
