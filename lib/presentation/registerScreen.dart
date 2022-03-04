@@ -4,6 +4,7 @@ import 'package:hold_my_hand/consts.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart' as admin;
 import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
+import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
 import 'package:hold_my_hand/presentation/benefector.dart';
@@ -61,8 +62,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                        create: (context) => DisabledPersonBloc(data: state.data),
+                  builder: (context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider<VoiceCommandsBloc>(
+                            create: (BuildContext context) =>
+                                VoiceCommandsBloc()..add(Initialize()),
+                          ),
+                          BlocProvider<DisabledPersonBloc>(
+                            create: (BuildContext context) =>
+                                DisabledPersonBloc(data: state.data),
+                          ),
+                        ],
                         child: const DisabledPersonScreen(),
                       )));
         } else if (state is Benefector) {
@@ -344,7 +354,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               password.text.isNotEmpty &&
                               lastName.text.isNotEmpty &&
                               firstName.text.isNotEmpty &&
-                              accountType.contains(true)&& validateEmail(email.text)==null && isNumeric(password.text) ==null) {
+                              accountType.contains(true) &&
+                              validateEmail(email.text) == null &&
+                              isNumeric(password.text) == null) {
                             if (accountType
                                     .indexWhere((element) => element == true) ==
                                 1) {
@@ -365,8 +377,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        content:
-                                            Text("please make sure you entered all the fields")));
+                                        content: Text(
+                                            "please make sure you entered all the fields")));
                               }
                             } else {
                               BlocProvider.of<RegisterationBloc>(context)

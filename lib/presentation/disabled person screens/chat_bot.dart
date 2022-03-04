@@ -21,6 +21,11 @@ class _ChatBotState extends State<ChatBot> {
       "widget": Text(
           "We don't store your credit card information. We only send it to banks."),
       "sender": "bot"
+    },
+    {
+      "widget": Text(
+          "You can say order food to order food, start chatting to start chatting and help to access the chatbot"),
+      "sender": "bot"
     }
   ];
 
@@ -28,6 +33,10 @@ class _ChatBotState extends State<ChatBot> {
     {"widget": Text("What services do you provide ? "), "sender": "person"},
     {
       "widget": Text("Does the app store any of my credit card infomration? "),
+      "sender": "person"
+    },
+    {
+      "widget": Text("How to use voice commands? "),
       "sender": "person"
     },
   ];
@@ -138,12 +147,13 @@ class _ChatBotState extends State<ChatBot> {
                         onTap: () {
                           list.add(questions[index]);
                           list.add(answers[index]);
+                          
+                          setState(() {});
                           scrollController.animateTo(
                             scrollController.position.maxScrollExtent,
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.fastOutSlowIn,
                           );
-                          setState(() {});
                         },
                         child: Container(
                           width: size.width * 0.9,

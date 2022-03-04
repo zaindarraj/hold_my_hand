@@ -2,21 +2,21 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechToText {
-  stt.SpeechToText _speechToText = stt.SpeechToText();
-  bool _speechEnabled = false;
+  stt.SpeechToText speechToText = stt.SpeechToText();
+  bool speechEnabled = false;
   String lastWords = '';
 
-  void initSpeech() async {
+  Future<void> initSpeech() async {
     try {
-      _speechEnabled = await _speechToText.listen(onResult: _onSpeechResult);
-    } on  stt.SpeechToTextNotInitializedException catch (e) {
+      speechEnabled = await speechToText.initialize();
+    } on stt.SpeechToTextNotInitializedException catch (e) {
       print(e.toString());
     }
   }
 
   /// Each time to start a speech recognition session
-  void startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
+  Future<void> startListening() async {
+    await speechToText.listen(onResult: onSpeechResult, partialResults: false);
   }
 
   /// Manually stop the active speech recognition session
@@ -24,12 +24,12 @@ class SpeechToText {
   /// and the SpeechToText plugin supports setting timeouts on the
   /// listen method.
   void stopListening() async {
-    await _speechToText.stop();
+    await speechToText.stop();
   }
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) {
+  void onSpeechResult(SpeechRecognitionResult result) {
     lastWords = result.recognizedWords;
     print(lastWords);
   }

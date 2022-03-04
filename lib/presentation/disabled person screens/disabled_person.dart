@@ -5,10 +5,11 @@ import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_
 import 'package:hold_my_hand/logic/bloCs/location/bloc/location_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/order%20food/bloc/order_food_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
+import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bloc.dart'
+    as voice_commands;
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chat_bot.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chatting.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/order_food.dart';
-import 'package:hold_my_hand/presentation/disabled%20person%20screens/voice_command.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
 class DisabledPersonScreen extends StatefulWidget {
@@ -107,19 +108,69 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                       },
                     ),
                   ),
-                )
+                ),
+                Expanded(
+                    child: Container(
+                  alignment: Alignment.bottomLeft,
+                  child: TextButton(
+                    child: const Text("Sign Out"),
+                    onPressed: () {
+                      BlocProvider.of<RegisterationBloc>(context)
+                          .add(SignOut());
+                    },
+                  ),
+                ))
               ],
             ),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: const Icon(Icons.logout),
-            onPressed: () {
-              //BlocProvider.of<RegisterationBloc>(context).add(SignOut());
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const VoiceCommand()));
+          floatingActionButton: BlocListener<voice_commands.VoiceCommandsBloc,
+              voice_commands.VoiceCommandsState>(
+            listener: (context, state) {
+              if (state is voice_commands.OrderFood) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                              create: (context) => OrderFoodBloc(),
+                              child: const OrderFoodScreen(),
+                            )));
+              }
+              if (state is voice_commands.StartChatting) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                              create: (context) => ChatBloc(
+                                  userID: disabledPersonBloc.data["userID"]),
+                              child: const ChattingScreen(),
+                            )));
+              }
+              if (state is voice_commands.ChatBot) {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const ChatBot()));
+              } else if (state is voice_commands.Started) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Listening...")));
+              } else if (state is voice_commands.UnknownCommand) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text(
+                        "Unkown Command..Try again or say help to access the chatbot for more info")));
+              } else if (state is voice_commands.Error) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.error)));
+              }
             },
+            child: FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              child: const Icon(Icons.mic),
+              onPressed: () {
+                //BlocProvider.of<RegisterationBloc>(context).add(SignOut());
+                BlocProvider.of<voice_commands.VoiceCommandsBloc>(context)
+                    .add(voice_commands.Listen());
+              },
+            ),
           ),
           body: Container(
             decoration: BoxDecoration(
