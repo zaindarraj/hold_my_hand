@@ -7,8 +7,11 @@ import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.d
 import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
+import 'package:hold_my_hand/presentation/awaiting_screen.dart';
 import 'package:hold_my_hand/presentation/benefector.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/disabled_person.dart';
+
+Map<String, dynamic>? benefectorData;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -58,6 +61,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return signInWidget(size);
             });
       }, listener: (context, state) async {
+        if (state is Awaiting) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AwaitingVerfication()));
+        } else if (state is Forbidden) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AwaitingVerfication()));
+        }
+
         if (state is User) {
           Navigator.pushReplacement(
               context,
@@ -76,10 +91,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: const DisabledPersonScreen(),
                       )));
         } else if (state is Benefector) {
+          benefectorData = state.data;
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => const BenefectorScreen()));
+                  builder: (context) => const BenefactorScreen()));
         } else if (state is Admin) {
           Navigator.pushReplacement(
               context,
@@ -157,13 +173,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: TextFormField(
                               controller: signInEmail,
                               validator: validateEmail,
-                              decoration:
-                                  const InputDecoration(label: Text("Email")),
+                              decoration: const InputDecoration(
+                                  label: Text("Email"),
+                                  icon: Icon(Icons.person)),
                             ),
                           ),
                           TextField(
                             controller: signInPassword,
                             decoration: const InputDecoration(
+                              icon: Icon(Icons.password),
                               label: Text("Password"),
                             ),
                             obscureText: true,
@@ -261,7 +279,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: TextFormField(
                         controller: email,
                         validator: validateEmail,
-                        decoration: const InputDecoration(label: Text("Email")),
+                        decoration: const InputDecoration(
+                            label: Text("Email"), icon: Icon(Icons.email)),
                       ),
                     ),
                     Form(
@@ -270,6 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         validator: isNumeric,
                         controller: password,
                         decoration: const InputDecoration(
+                          icon: Icon(Icons.password),
                           label: Text("Password"),
                         ),
                         obscureText: true,
@@ -278,14 +298,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextField(
                       controller: firstName,
                       decoration: const InputDecoration(
-                        label: Text("First Name"),
-                      ),
+                          label: Text("First Name"), icon: Icon(Icons.person)),
                     ),
                     TextField(
                       controller: lastName,
                       decoration: const InputDecoration(
-                        label: Text("Last Name"),
-                      ),
+                          label: Text("Last Name"), icon: Icon(Icons.person)),
                     ),
                     ToggleButtons(
                         selectedColor: Colors.blue,
@@ -293,7 +311,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           for (int i = 0; i <= 1; i++) {
                             accountType[i] = false;
                           }
-                          print(index);
                           accountType[index] = true;
                           setState(() {});
                         },
@@ -396,7 +413,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             (element) => element == true) ==
                                         1
                                     ? "disabled person"
-                                    : "benefector",
+                                    : "benefactor",
                               ));
                             }
                           } else {

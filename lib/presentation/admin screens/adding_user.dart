@@ -100,33 +100,37 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Form(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: TextFormField(
-                          controller: email,
-                          validator: validateEmail,
-                          decoration:
-                              const InputDecoration(label: Text("Email")),
-                        ),
-                      ),
-                      TextField(
-                        controller: password,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        controller: email,
+                        validator: validateEmail,
                         decoration: const InputDecoration(
-                          label: Text("Password"),
-                        ),
-                        obscureText: true,
+                          icon: Icon(Icons.person),
+                          label: Text("Email")),
                       ),
-                      TextField(
-                        controller: firstName,
-                        decoration: const InputDecoration(
-                          label: Text("First Name"),
-                        ),
+                    ),
+                    TextField(
+                      controller: password,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.password),
+                        label: Text("Password"),
                       ),
-                      TextField(
-                        controller: lastName,
-                        decoration: const InputDecoration(
-                          label: Text("Last Name"),
-                        ),
+                      obscureText: true,
+                    ),
+                    TextField(
+                      controller: firstName,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.drafts),
+                        label: Text("First Name"),
                       ),
+                    ),
+                    TextField(
+                      controller: lastName,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.drafts),
+                        label: Text("Last Name"),
+                      ),
+                    ),
                       TextField(
                         controller: disability,
                         decoration: const InputDecoration(

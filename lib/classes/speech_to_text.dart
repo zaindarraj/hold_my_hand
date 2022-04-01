@@ -10,7 +10,6 @@ class SpeechToText {
     try {
       speechEnabled = await speechToText.initialize();
     } on stt.SpeechToTextNotInitializedException catch (e) {
-      print(e.toString());
     }
   }
 

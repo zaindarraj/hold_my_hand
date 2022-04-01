@@ -11,7 +11,7 @@ class LocationClass {
   }
 
   static Future<dynamic> getLocation() async {
-    if (await Geolocator.isLocationServiceEnabled()) {
+    if (await Geolocator.isLocationServiceEnabled() && await requestPermission()== LocationPermission.whileInUse) {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
         return position;

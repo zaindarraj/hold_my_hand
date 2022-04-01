@@ -35,38 +35,35 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         } else {
           emit(UserListReady(listOfUser: response));
         }
-      } else if (event is GetBenefectorList) {
+      } else if (event is GetBenefactorList) {
         emit(Loading());
-        dynamic response = await API.getUsersList();
+        dynamic response = await API.getBenefactorsList();
         if (response == noUsers) {
           emit(NoUsers());
         } else if (response == serverError) {
           emit(Error(error: response));
-        } else if(response.runtimeType is List<Map<dynamic, dynamic>>){
-          emit(BenefectorListReady(list: response));
+        } else if (response.runtimeType == List<Map<dynamic, dynamic>>) {
+          emit(BenefactorListReady(list: response));
         }
       } else if (event is DeleteBenefector) {
-        String response = await API.deleteBenefector(event.email);
+        String response = await API.deleteBenefactor(event.email);
         if (response == oK) {
           emit(Done());
         } else {
           emit(Error(error: response));
         }
-      } else if (event is ApproveUser) {
+      } else if (event is Approve) {
         emit(Loading());
-        dynamic response = await API.approve(event.email, "disabled person");
+        dynamic response = await API.approve(event.userID, event.order);
         if (response == oK) {
           emit(Done());
         } else {
           emit(Error(error: response));
         }
-      } else if (event is ApproveBenefector) {
-        dynamic response = await API.approve(event.email, "benefector");
-        if (response == oK) {
-          emit(Done());
-        } else {
-          emit(Error(error: response));
-        }
+      } else if (event is AddCenter) {
+//api
+      } else if (event is DeleteCenter) {
+//api
       }
     });
   }

@@ -49,7 +49,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                     const Duration(seconds: 10),
                     (Timer t) => BlocProvider.of<ChatBloc>(context).add(
                         ReadMessages(
-                            receiverID: userID.text,
+                            receiverID: int.parse(userID.text),
                             senderID:
                                 BlocProvider.of<ChatBloc>(context).userID)));
               }
@@ -73,12 +73,14 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 child: ListTile(
                                   leading: Text(
-                                    state.list[reversedIndex]["userID"],
+                                    state.list[reversedIndex]["data"]
+                                            ["sender_id"]
+                                        .toString(),
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor),
                                   ),
-                                  title: Text(
-                                      state.list[reversedIndex]["message"]),
+                                  title: Text(state.list[reversedIndex]["data"]
+                                      ["message"]),
                                 ),
                               );
                             }),
@@ -95,11 +97,15 @@ class _ChattingScreenState extends State<ChattingScreen> {
                               )),
                           IconButton(
                               onPressed: () {
+                                print(BlocProvider.of<ChatBloc>(context)
+                                                  .userID);
                                 if (message.text.isNotEmpty) {
+                                  print(BlocProvider.of<ChatBloc>(context)
+                                      .userID);
                                   BlocProvider.of<ChatBloc>(context).add(
                                       SendMessage(
                                           message: message.text,
-                                          receiverID: userID.text,
+                                          receiverID: int.parse(userID.text),
                                           senderID:
                                               BlocProvider.of<ChatBloc>(context)
                                                   .userID));
@@ -134,7 +140,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                         onPressed: () {
                           if (userID.text.isNotEmpty) {
                             BlocProvider.of<ChatBloc>(context).add(ReadMessages(
-                                receiverID: userID.text,
+                                receiverID: int.parse(userID.text),
                                 senderID:
                                     BlocProvider.of<ChatBloc>(context).userID));
                             setState(() {});

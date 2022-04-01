@@ -6,7 +6,7 @@ part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  String userID;
+  int userID;
   ChatBloc({required this.userID}) : super(ChatInitial()) {
     on<ChatEvent>((event, emit) async {
       if (event is ReadMessages) {
@@ -14,20 +14,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             await API.readMessages(event.senderID, event.receiverID);
         if (response.runtimeType == String) {
           emit(Error(errorMessage: response));
+        } else if (response.runtimeType == List) {
+          emit(Messages(list: response));
         } else {
-          emit(Messages(list: response["messages"]));
+          emit(Messages(list: []));
         }
       } else if (event is SendMessage) {
         dynamic response = await API.sendMessege(
             event.senderID, event.receiverID, event.message);
 
-        if (response == serverError) {
-          emit(Error(
-              errorMessage: serverError));
-        } else {
-          emit(Messages(
-            list: response["messages"],
-          ));
+        if (response.runtimeType == List) {
+          emit(Messages(list: response));
+        } else if(response.runtimeType == Map) {
+          emit(Messages(list: []));
         }
       }
     });

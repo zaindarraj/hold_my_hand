@@ -18,16 +18,16 @@ class MyApp extends StatelessWidget {
         ..add(CheckFlutterStorage()),
       child: MaterialApp(
         theme: ThemeData(
-            colorScheme:  ColorScheme(
+            colorScheme: ColorScheme(
               brightness: Brightness.light,
               surface: Colors.blue[800] as Color,
-              onSurface:  Colors.grey[850] as Color,
-              primary:  Colors.blue[800] as Color,
+              onSurface: Colors.grey[850] as Color,
+              primary: Colors.blue[800] as Color,
               onPrimary: Colors.white,
               secondary: Colors.white,
               onSecondary: Colors.white,
               background: Colors.white,
-              onBackground:Colors.white,
+              onBackground: Colors.white,
               error: Colors.red,
               onError: Colors.white,
             ),

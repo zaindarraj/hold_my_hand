@@ -18,10 +18,15 @@ class UserListReady extends AdminState {
   UserListReady({required this.listOfUser});
 }
 
-class BenefectorListReady extends AdminState {
+class BenefactorListReady extends AdminState {
   List<Map<dynamic, dynamic>> list;
-  BenefectorListReady({required this.list});
+  BenefactorListReady({required this.list});
 }
 
 //no users to approve
-class NoUsers extends AdminState{}
+class NoUsers extends AdminState {}
+
+class Centers extends AdminState {
+  List<Map<dynamic,dynamic>> list;
+  Centers({required this.list});
+}

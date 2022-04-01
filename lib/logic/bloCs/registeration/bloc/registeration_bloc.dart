@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:hold_my_hand/classes/api.dart';
 import 'package:hold_my_hand/classes/flutter_secure_storage.dart';
 import 'package:hold_my_hand/classes/local_auth.dart';
+import 'package:hold_my_hand/presentation/awaiting_screen.dart';
 
 import '../../../../consts.dart';
 part 'registeration_state.dart';
@@ -27,18 +28,17 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           response = await API.signUpUser(event.email, event.password,
               event.fName, event.lName, event.disabilityType as String);
         } else {
-          response = await API.signUpBenefector(
+          response = await API.signUpBenefactor(
             event.email,
             event.password,
             event.fName,
             event.lName,
           );
         }
-        if(response.runtimeType != String){
+        if (response.runtimeType != String) {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          emit(User(data: response["data"]));
-        }
-         else {
+          emit(Awaiting());
+        } else {
           emit(ErrorState(message: response));
         }
       } else if (event is CheckBio) {
@@ -48,6 +48,7 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
               if (await localAuthentication.auth()) {
                 emit(Loading());
                 Map<String, String> map = await flutterSecureStorage.get();
+
                 if (map["email"] == adminEmail &&
                     map["password"] == adminPassword) {
                   flutterSecureStorage.setState("0");
@@ -60,11 +61,21 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
                     Map<String, dynamic> data = response["data"];
                     await flutterSecureStorage.setAll(
                         data["email"], data["password"], "0");
-                    String accountType = response["code"];
-                    if (accountType == "1") {
-                      emit(User(data: response["data"]));
-                    } else if (accountType == "2") {
-                      emit(Benefector(data: response["data"]));
+                    bool isActivated =
+                        response["data"]["accepted"] == 1 ? true : false;
+                    int accountType = response["data"]["user_type"];
+                    if (isActivated) {
+                      if (accountType == 1) {
+                        emit(User(data: response["data"]));
+                      } else if (accountType == 2) {
+                        emit(Benefector(data: response["data"]));
+                      }
+                    } else {
+                      if (response["data"]["accepted"] == "2") {
+                        emit(Forbidden());
+                      } else {
+                        emit(Awaiting());
+                      }
                     }
                   } else {
                     emit(ErrorState(message: response));
@@ -80,6 +91,7 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           emit(RegisterationInitial());
         } else {
           Map<String, String> map = await flutterSecureStorage.get();
+
           if (!await flutterSecureStorage.isLoggedOut()) {
             if (map["email"] == adminEmail &&
                 map["password"] == adminPassword) {
@@ -89,14 +101,23 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
             } else {
               dynamic response = await API.signIn(
                   map["email"] as String, map["password"] as String);
-
-              if (response is Map) {
+              if (response.runtimeType != String) {
                 await flutterSecureStorage.setState("0");
-                String accountType = response["code"];
-                if (accountType == "1") {
-                  emit(User(data: response["data"]));
-                } else if (accountType == "2") {
-                  emit(Benefector(data: response["data"]));
+                bool isActivated =
+                    response["data"]["accepted"] == 1 ? true : false;
+                int accountType = response["data"]["user_type"];
+                if (isActivated) {
+                  if (accountType == 1) {
+                    emit(User(data: response["data"]));
+                  } else if (accountType == 2) {
+                    emit(Benefector(data: response["data"]));
+                  }
+                } else {
+                  if (response["data"]["accepted"] == "2") {
+                    emit(Forbidden());
+                  } else {
+                    emit(Awaiting());
+                  }
                 }
               } else {
                 emit(ErrorState(message: response));
@@ -109,15 +130,25 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
       } else if (event is SignIn) {
         emit(Loading());
         dynamic response = await API.signIn(event.email, event.password);
-        if (response is String) {
+
+        if (response.runtimeType == String) {
           emit(ErrorState(message: response));
         } else {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          String accountType = response["code"];
-          if (accountType == "1") {
-            emit(User(data: response["data"]));
-          } else if (accountType == "2") {
-            emit(Benefector(data: response["data"]));
+          bool isActivated = response["data"]["accepted"] == 1 ? true : false;
+          int accountType = response["data"]["user_type"];
+          if (isActivated) {
+            if (accountType == 1) {
+              emit(User(data: response["data"]));
+            } else if (accountType == 2) {
+              emit(Benefector(data: response["data"]));
+            }
+          } else {
+            if (response["data"]["accepted"] == "2") {
+              emit(Forbidden());
+            } else {
+              emit(Awaiting());
+            }
           }
         }
       }

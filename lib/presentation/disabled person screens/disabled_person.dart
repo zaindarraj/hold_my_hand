@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/chat/bloc/chat_bloc.dart';
+import 'package:hold_my_hand/logic/bloCs/delivery%20bloc/bloc/delivery_service_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/location/bloc/location_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/order%20food/bloc/order_food_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bl
     as voice_commands;
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chat_bot.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chatting.dart';
+import 'package:hold_my_hand/presentation/disabled%20person%20screens/delivery_service.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/order_food.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
@@ -56,9 +58,7 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                             "Name : ",
                             style: TextStyle(color: Colors.white),
                           ),
-                          Text(disabledPersonBloc.data["fname"] +
-                              " " +
-                              disabledPersonBloc.data["lname"])
+                          Text(disabledPersonBloc.data["name"])
                         ],
                       ),
                       Row(
@@ -67,7 +67,7 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                             "User ID : ",
                             style: TextStyle(color: Colors.white),
                           ),
-                          Text(disabledPersonBloc.data["userID"])
+                          Text(disabledPersonBloc.data["id"].toString())
                         ],
                       ),
                       Row(
@@ -96,13 +96,13 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                               if (value == true) {
                                 BlocProvider.of<LocationBloc>(context).add(
                                     EnableLocation(
-                                        userID:
-                                            disabledPersonBloc.data["userID"]));
+                                        userID: disabledPersonBloc.data["id"]
+                                            .toString()));
                               } else {
                                 BlocProvider.of<LocationBloc>(context).add(
                                     DisableLocation(
-                                        userID:
-                                            disabledPersonBloc.data["userID"]));
+                                        userID: disabledPersonBloc.data["id"]
+                                            .toString()));
                               }
                             });
                       },
@@ -132,8 +132,11 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => BlocProvider(
-                              create: (context) => OrderFoodBloc(),
+                        builder: (_) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider(create: (_) => OrderFoodBloc()),
+                                BlocProvider.value(value: disabledPersonBloc)
+                              ],
                               child: const OrderFoodScreen(),
                             )));
               }
@@ -197,13 +200,47 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => BlocProvider(
-                          create: (_) => ChatBloc(
-                              userID:
-                                  BlocProvider.of<DisabledPersonBloc>(context)
-                                      .data["userID"]),
-                          child: const ChattingScreen(),
+                    builder: (_) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(
+                                value: BlocProvider.of<DisabledPersonBloc>(
+                                    context)),
+                            BlocProvider(create: (_) => DeliveryServiceBloc())
+                          ],
+                          child: const DeliveryService(),
                         )));
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  gradient: LinearGradient(colors: [
+                    Colors.blue[800] as Color,
+                    Colors.blue[600] as Color
+                  ])),
+              child: const Center(
+                  child: Text(
+                "Delivery Service",
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ))),
+        ),
+        TextButton(
+          onPressed: () {
+            try {
+            
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => BlocProvider(
+                            create: (_) => ChatBloc(
+                                userID:
+                                    BlocProvider.of<DisabledPersonBloc>(context)
+                                        .data["id"]),
+                            child: const ChattingScreen(),
+                          )));
+            } catch (e) {
+              print(e);
+            }
           },
           child: Container(
               decoration: BoxDecoration(
@@ -243,8 +280,13 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => BlocProvider(
-                          create: (context) => OrderFoodBloc(),
+                    builder: (_) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(
+                                value: BlocProvider.of<DisabledPersonBloc>(
+                                    context)),
+                            BlocProvider(create: (_) => OrderFoodBloc())
+                          ],
                           child: const OrderFoodScreen(),
                         )));
           },

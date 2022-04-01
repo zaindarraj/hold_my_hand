@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/order%20food/bloc/order_food_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
 
@@ -11,14 +12,15 @@ class OrderFoodScreen extends StatefulWidget {
 }
 
 class _OrderFoodScreenState extends State<OrderFoodScreen> {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
   TextEditingController creditCardID = TextEditingController();
   List<bool> selectedFood = List.generate(4, (index) => false);
   List<String> foods = ["Pizza with vegetabled", "Shaorma", "Fries", "Soap"];
   List<String> addFood = [];
   @override
   Widget build(BuildContext context) {
+    DisabledPersonBloc disabledPersonBloc =
+        BlocProvider.of<DisabledPersonBloc>(context);
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: BlocConsumer<OrderFoodBloc, OrderFoodState>(
@@ -60,25 +62,14 @@ class _OrderFoodScreenState extends State<OrderFoodScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                   Form(
-                                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                                     child: TextFormField(
-                                       validator: validateEmail,
-                                      controller: email,
-                                      decoration:
-                                          const InputDecoration(label: Text("Email")),
-                                  ),
-                                   ),
-                                   TextField(
-                                    controller: password,
-                                    obscureText: true,
-                                    decoration:const InputDecoration(
-                                        label: Text("Password")),
-                                  ),
-                                   TextField(
+                                  TextField(
                                     controller: creditCardID,
-                                    decoration:
-                                        const InputDecoration(label: Text("Card ID")),
+                                    decoration: const InputDecoration(
+                                        icon: Icon(Icons.card_membership),
+                                        label: Text("Card ID")),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.04,
                                   ),
                                   SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
@@ -132,17 +123,16 @@ class _OrderFoodScreenState extends State<OrderFoodScreen> {
                                   ),
                                   TextButton(
                                       onPressed: () {
-
                                         if (creditCardID.text.isNotEmpty &&
-                                            email.text.isNotEmpty &&
-                                            password.text.isNotEmpty &&
-                                            addFood.isNotEmpty&&validateEmail(email.text)==null) {
+                                            addFood.isNotEmpty) {
+                                          print(disabledPersonBloc
+                                                      .data["id"]);
                                           BlocProvider.of<OrderFoodBloc>(
                                                   context)
                                               .add(OrderFood(
+                                                  userID: disabledPersonBloc
+                                                      .data["id"].toString(),
                                                   cardID: creditCardID.text,
-                                                  email: email.text,
-                                                  password: password.text,
                                                   order: addFood));
                                         } else {
                                           ScaffoldMessenger.of(context)

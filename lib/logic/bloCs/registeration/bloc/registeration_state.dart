@@ -5,8 +5,10 @@ abstract class RegisterationState {}
 class RegisterationInitial extends RegisterationState {}
 
 class Loading extends RegisterationState {}
-
+class Awaiting extends RegisterationState{}
 class Done extends RegisterationState {}
+class Forbidden extends RegisterationState {}
+
 class Admin extends RegisterationState{}
 class User extends RegisterationState {
   Map<String, dynamic> data;

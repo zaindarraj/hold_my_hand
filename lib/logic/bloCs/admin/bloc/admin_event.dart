@@ -39,12 +39,24 @@ class AddUser extends AdminEvent {
 }
 
 class GetUsersList extends AdminEvent {}
-class GetBenefectorList extends AdminEvent {}
-class ApproveBenefector extends AdminEvent {
-  String email;
-  ApproveBenefector({required this.email});
+
+class GetBenefactorList extends AdminEvent {}
+
+class Approve extends AdminEvent {
+  String userID;
+  String order;
+  Approve({required this.order, required this.userID});
 }
-class ApproveUser extends AdminEvent {
-  String email;
-  ApproveUser({required this.email});
+
+class GetCenters extends AdminEvent {}
+
+class AddCenter extends AdminEvent {
+  String name;
+  AddCenter({required this.name});
+}
+
+
+class DeleteCenter extends AdminEvent {
+  String centerID;
+  DeleteCenter({required this.centerID});
 }
