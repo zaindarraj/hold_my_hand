@@ -11,7 +11,6 @@ import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
 import 'package:hold_my_hand/presentation/awaiting_screen.dart';
 import 'package:hold_my_hand/presentation/benefactor/main_benefactor.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/disabled_person.dart';
-
 Map<String, dynamic>? benefectorData;
 
 class RegisterScreen extends StatefulWidget {

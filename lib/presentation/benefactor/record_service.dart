@@ -5,7 +5,6 @@ import 'package:hold_my_hand/classes/location.dart';
 import 'package:hold_my_hand/consts.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
-import '../notifications.dart';
 
 class RecordServiceScreen extends StatefulWidget {
   const RecordServiceScreen({Key? key}) : super(key: key);

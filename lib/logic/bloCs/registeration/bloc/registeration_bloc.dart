@@ -101,11 +101,13 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
             } else {
               dynamic response = await API.signIn(
                   map["email"] as String, map["password"] as String);
+              print(response);
               if (response.runtimeType != String) {
                 await flutterSecureStorage.setState("0");
                 bool isActivated =
                     response["data"]["accepted"] == 1 ? true : false;
                 int accountType = response["data"]["user_type"];
+                print(accountType);
                 if (isActivated) {
                   if (accountType == 1) {
                     emit(User(data: response["data"]));

@@ -4,7 +4,10 @@ abstract class AdminState {}
 
 class AdminInitial extends AdminState {}
 
-class Done extends AdminState {}
+class Done extends AdminState {
+  String message;
+  Done({required this.message});
+}
 
 class Loading extends AdminState {}
 
@@ -27,6 +30,6 @@ class BenefactorListReady extends AdminState {
 class NoUsers extends AdminState {}
 
 class Centers extends AdminState {
-  List<Map<dynamic,dynamic>> list;
+  List<Map<dynamic, dynamic>> list;
   Centers({required this.list});
 }

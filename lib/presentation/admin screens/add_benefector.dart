@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart';
 
 import '../../methods.dart';
 
-class AddBenefectorScreen extends StatefulWidget {
-  const AddBenefectorScreen({Key? key}) : super(key: key);
+class AddBenefactorScreen extends StatefulWidget {
+  const AddBenefactorScreen({Key? key}) : super(key: key);
 
   @override
-  _AddBenefectorScreenState createState() => _AddBenefectorScreenState();
+  _AddBenefactorScreenState createState() => _AddBenefactorScreenState();
 }
 
-class _AddBenefectorScreenState extends State<AddBenefectorScreen> {
+class _AddBenefactorScreenState extends State<AddBenefactorScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController firstName = TextEditingController();
@@ -20,78 +21,81 @@ class _AddBenefectorScreenState extends State<AddBenefectorScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.blue[800] as Color, Colors.blue[600] as Color])),
-      child: BlocConsumer<AdminBloc, AdminState>(
-          builder: (context, state) {
-            if (state is Done) {
-              return Center(
-                child: Container(
-                  width: size.width * 0.5,
-                  height: size.height * 0.3,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: const Center(child: Text("All Done")),
-                ),
-              );
-            } else if (state is Loading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is Error) {
-              return Center(
-                child: Text(state.error),
-              );
-            }
-            return body(size, context);
-          },
-          listener: (context, state) {}),
-    ));
+        body: BlocConsumer<AdminBloc, AdminState>(builder: (context, state) {
+    
+      return body(size, context);
+    }, listener: (context, state) {
+      if(state is Done){
+         ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Done")));
+      }
+      if (state is Error) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(state.error)));
+      }
+    }));
   }
 
   SingleChildScrollView body(Size size, BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Colors.blue[800] as Color,
-              Colors.blue[600] as Color
-            ])),
-            width: size.width,
-            height: size.height * 0.3,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Add a User",
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  const Text("Provide the information needed !",
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
-                ],
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: size.width,
+                height: size.height * 0.5,
+                child: SvgPicture.asset(
+                  "assets/top.svg",
+                  fit: BoxFit.fill,
+                ),
               ),
-            ),
+              SizedBox(
+                width: size.width,
+                height: size.height * 0.5,
+                child: SvgPicture.asset(
+                  "assets/bottom.svg",
+                  fit: BoxFit.fill,
+                ),
+              )
+            ],
           ),
+          Positioned(
+              top: 0,
+              left: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      Text(
+                        "Add a Benefactor to the database !",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
           Container(
             height: size.height * 0.7,
             decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    spreadRadius: 5,
+                    color: Colors.blue,
+                  )
+                ],
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
@@ -110,8 +114,7 @@ class _AddBenefectorScreenState extends State<AddBenefectorScreen> {
                         controller: email,
                         validator: validateEmail,
                         decoration: const InputDecoration(
-                          icon: Icon(Icons.person),
-                          label: Text("Email")),
+                            icon: Icon(Icons.person), label: Text("Email")),
                       ),
                     ),
                     TextField(
@@ -136,14 +139,14 @@ class _AddBenefectorScreenState extends State<AddBenefectorScreen> {
                         label: Text("Last Name"),
                       ),
                     ),
+                 
                     TextButton(
                         onPressed: () {
                           if (email.text.isNotEmpty &&
                               password.text.isNotEmpty &&
                               lastName.text.isNotEmpty &&
-                              firstName.text.isNotEmpty) {
-                            BlocProvider.of<AdminBloc>(context)
-                                .add(AddBenefector(
+                              firstName.text.isNotEmpty ) {
+                            BlocProvider.of<AdminBloc>(context).add(AddBenefector(
                               fname: firstName.text,
                               lnamel: lastName.text,
                               email: email.text,

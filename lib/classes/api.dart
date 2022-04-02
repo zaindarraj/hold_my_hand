@@ -39,6 +39,51 @@ class API {
     }
   }
 
+  static Future<List<Map<String, dynamic>>?> getNearbyUsers(
+      String benID) async {
+    try {
+      Response response = await post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'id': benID,
+        }),
+      );
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> jsonList = jsonDecode(response.body);
+        return jsonList;
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<String> addCenter(String center) async {
+    try {
+      Response response = await post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'center': center,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final jsonMap = jsonDecode(response.body);
+        if (jsonMap["code"] == "1") {
+          return "Center added succefully.";
+        }
+      }
+      return "Center not added, please try again.";
+    } catch (_) {
+      return "Center not added, please try again.";
+    }
+  }
+
   //sign ups are used to add users/benefectors as well
   static Future<dynamic> signUpUser(String email, String password, String fName,
       String lName, String disablity) async {

@@ -13,7 +13,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         String response = await API.signUpUser(event.email, event.password,
             event.fname, event.lnamel, event.disablity);
         if (response == oK) {
-          emit(Done());
+          emit(Done(message: oK));
         } else {
           emit(Error(error: response));
         }
@@ -21,7 +21,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         emit(Loading());
         String response = await API.deleteUser(event.email);
         if (response == oK) {
-          emit(Done());
+          emit(Done(message: oK));
         } else {
           emit(Error(error: response));
         }
@@ -48,7 +48,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       } else if (event is DeleteBenefector) {
         String response = await API.deleteBenefactor(event.email);
         if (response == oK) {
-          emit(Done());
+          emit(Done(message: oK));
         } else {
           emit(Error(error: response));
         }
@@ -56,11 +56,14 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         emit(Loading());
         dynamic response = await API.approve(event.userID, event.order);
         if (response == oK) {
-          emit(Done());
+          emit(Done(message: oK));
         } else {
           emit(Error(error: response));
         }
       } else if (event is AddCenter) {
+        dynamic response = await API.addCenter(event.name);
+        emit(Done(message:  response));
+
 //api
       } else if (event is DeleteCenter) {
 //api
