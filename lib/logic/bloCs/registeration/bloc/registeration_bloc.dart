@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:hold_my_hand/classes/api.dart';
 import 'package:hold_my_hand/classes/flutter_secure_storage.dart';
 import 'package:hold_my_hand/classes/local_auth.dart';
-import 'package:hold_my_hand/presentation/awaiting_screen.dart';
 
 import '../../../../consts.dart';
 part 'registeration_state.dart';
@@ -61,22 +60,14 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
                     Map<String, dynamic> data = response["data"];
                     await flutterSecureStorage.setAll(
                         data["email"], data["password"], "0");
-                    bool isActivated =
-                        response["data"]["accepted"] == 1 ? true : false;
+                   
                     int accountType = response["data"]["user_type"];
-                    if (isActivated) {
                       if (accountType == 1) {
                         emit(User(data: response["data"]));
                       } else if (accountType == 2) {
                         emit(Benefector(data: response["data"]));
                       }
-                    } else {
-                      if (response["data"]["accepted"] == "2") {
-                        emit(Forbidden());
-                      } else {
-                        emit(Awaiting());
-                      }
-                    }
+                  
                   } else {
                     emit(ErrorState(message: response));
                   }
@@ -104,23 +95,15 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
               print(response);
               if (response.runtimeType != String) {
                 await flutterSecureStorage.setState("0");
-                bool isActivated =
-                    response["data"]["accepted"] == 1 ? true : false;
+               
                 int accountType = response["data"]["user_type"];
                 print(accountType);
-                if (isActivated) {
                   if (accountType == 1) {
                     emit(User(data: response["data"]));
                   } else if (accountType == 2) {
                     emit(Benefector(data: response["data"]));
                   }
-                } else {
-                  if (response["data"]["accepted"] == "2") {
-                    emit(Forbidden());
-                  } else {
-                    emit(Awaiting());
-                  }
-                }
+               
               } else {
                 emit(ErrorState(message: response));
               }
@@ -137,21 +120,14 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           emit(ErrorState(message: response));
         } else {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          bool isActivated = response["data"]["accepted"] == 1 ? true : false;
           int accountType = response["data"]["user_type"];
-          if (isActivated) {
+          
             if (accountType == 1) {
               emit(User(data: response["data"]));
             } else if (accountType == 2) {
               emit(Benefector(data: response["data"]));
             }
-          } else {
-            if (response["data"]["accepted"] == "2") {
-              emit(Forbidden());
-            } else {
-              emit(Awaiting());
-            }
-          }
+         
         }
       }
     });

@@ -8,7 +8,6 @@ import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.d
 import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
-import 'package:hold_my_hand/presentation/awaiting_screen.dart';
 import 'package:hold_my_hand/presentation/benefactor/main_benefactor.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/disabled_person.dart';
 Map<String, dynamic>? benefectorData;
@@ -58,17 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return signInWidget(size);
             });
       }, listener: (context, state) async {
-        if (state is Awaiting) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AwaitingVerfication()));
-        } else if (state is Forbidden) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AwaitingVerfication()));
-        }
+       
 
         if (state is User) {
           Navigator.pushReplacement(
