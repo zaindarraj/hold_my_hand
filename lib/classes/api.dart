@@ -378,7 +378,7 @@ class API {
   }
 
   static Future<dynamic> orderFood(
-      String userID, String cardID, List<String> order) async {
+      String userID, String cardID, String order) async {
     try {
       Response response = await post(
         Uri.parse(url),

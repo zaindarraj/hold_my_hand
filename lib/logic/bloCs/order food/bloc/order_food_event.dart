@@ -5,7 +5,7 @@ abstract class OrderFoodEvent {}
 class OrderFood extends OrderFoodEvent {
   String userID;
   String cardID;
-  List<String> order;
+  String order;
   OrderFood(
       {required this.cardID, required this.userID,
        required this.order});

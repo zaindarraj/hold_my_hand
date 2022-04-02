@@ -17,3 +17,7 @@ class ChatBot extends VoiceCommandsState {}
 
 class Stopped extends VoiceCommandsState{}
 class Started extends VoiceCommandsState{}
+
+class Delivery extends VoiceCommandsState{}
+
+class Appointment extends VoiceCommandsState{}

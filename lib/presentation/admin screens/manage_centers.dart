@@ -18,9 +18,7 @@ class _ManageCentersState extends State<ManageCenters> {
     return  Scaffold(
       body: Column(
         children: [
-            SizedBox(
-              width: size.width,
-              child: SvgPicture.asset("assets/c.svg",)),
+            
               
         ],
       ),

@@ -16,37 +16,56 @@ class _DeliveryServiceState extends State<DeliveryService> {
 
   @override
   Widget build(BuildContext context) {
-        String userID = BlocProvider.of<DisabledPersonBloc>(context).data["id"].toString();
+    String userID =
+        BlocProvider.of<DisabledPersonBloc>(context).data["id"].toString();
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: BlocConsumer<DeliveryServiceBloc, DeliveryServiceState>(
-        listener: (context, state) {},
-        builder: (context, state) {
+        listener: (context, state) {
           if (state is Done) {
-            return const Center(
-              child: Text("DONE"),
-            );
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Done !")));
           }
+        },
+        builder: (context, state) {
           return Center(
-            child: Container(
-              width: size.width,
-              height: size.height,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Colors.blue[800] as Color,
-                Colors.blue[600] as Color
-              ])),
-              child: Column(
-                children: [
-                  Expanded(flex: 1, child: intro(size, context)),
-                  Expanded(
-                      flex: 2,
+            child: SingleChildScrollView(
+              child: Container(
+                width: size.width,
+                height: size.height,
+                decoration: BoxDecoration(color: Colors.white),
+                child: Stack(
+                  children: [
+                    Container(
+                        alignment: Alignment.topCenter,
+                        width: size.width,
+                        height: size.height * 0.5,
+                        child: Image.asset("assets/delivery.png")),
+                    Positioned(
+                        top: 0,
+                        child: SafeArea(
+                          child: Container(
+                            width: size.width * 0.1,
+                            height: size.height * 0.1,
+                            color: Colors.white.withOpacity(0.5),
+                            child: IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_rounded,
+                                  color: Colors.blue,
+                                )),
+                          ),
+                        )),
+                    Positioned(
+                      top: size.height * 0.5,
                       child: Container(
                         width: size.width,
-                        height: size.height,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
+                        height: size.height * 0.5,
+                        decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.5),
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 topRight: Radius.circular(20))),
@@ -59,6 +78,15 @@ class _DeliveryServiceState extends State<DeliveryService> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  const Text(
+                                    "Delivery Service right to your location",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        letterSpacing: 2,
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 23),
+                                  ),
                                   TextField(
                                     controller: from,
                                     decoration: const InputDecoration(
@@ -86,16 +114,30 @@ class _DeliveryServiceState extends State<DeliveryService> {
                                                   userID: userID));
                                         }
                                       },
-                                      child: const Center(
-                                        child: Text("Submit"),
+                                      child: Container(
+                                        width: size.width * 0.4,
+                                        decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        padding: EdgeInsets.all(18),
+                                        child: Center(
+                                          child: Text(
+                                            "Submit",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
                                       ))
                                 ],
                               ),
                             ),
                           ),
                         ),
-                      ))
-                ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );

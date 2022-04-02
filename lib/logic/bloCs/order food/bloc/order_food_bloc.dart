@@ -9,8 +9,8 @@ class OrderFoodBloc extends Bloc<OrderFoodEvent, OrderFoodState> {
   OrderFoodBloc() : super(OrderFoodInitial()) {
     on<OrderFoodEvent>((event, emit) async {
       if (event is OrderFood) {
-        dynamic response =await API.orderFood(
-          event.userID, event.cardID, event.order);
+        dynamic response =
+            await API.orderFood(event.userID, event.cardID, event.order);
         if (response == 1) {
           emit(Done());
         } else {

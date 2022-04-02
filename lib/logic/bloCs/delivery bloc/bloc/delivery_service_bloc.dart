@@ -12,6 +12,7 @@ class DeliveryServiceBloc
       if (event is RequestDelivery) {
         dynamic response =
             await API.requestDelivery(event.userID, event.from, event.object);
+        print(response);
         if (response.runtimeType == int) {
           emit(Done());
         } else {

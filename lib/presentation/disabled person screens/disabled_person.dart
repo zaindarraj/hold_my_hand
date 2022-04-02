@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hold_my_hand/logic/bloCs/chat/bloc/chat_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/delivery%20bloc/bloc/delivery_service_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:hold_my_hand/logic/bloCs/order%20food/bloc/order_food_bloc.dart'
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bloc.dart'
     as voice_commands;
+import 'package:hold_my_hand/presentation/disabled%20person%20screens/book_apointment.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chat_bot.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chatting.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/delivery_service.dart';
@@ -163,6 +165,16 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
               } else if (state is voice_commands.Error) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.error)));
+              }else if (state is voice_commands.Appointment) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const BookApointment()));
+              }else if (state is voice_commands.Delivery) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const DeliveryService()));
               }
             },
             child: FloatingActionButton(
@@ -175,192 +187,230 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
               },
             ),
           ),
-          body: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Colors.blue[800] as Color,
-              Colors.blue[600] as Color
-            ])),
-            child: BlocConsumer<DisabledPersonBloc, DisabledPersonState>(
-                builder: (context, state) {
-                  return body(size, intro(size), functions(size));
-                },
-                listener: (context, state) {}),
-          )),
+          body: BlocConsumer<DisabledPersonBloc, DisabledPersonState>(
+              builder: (context, state) {
+                return functions(size);
+              },
+              listener: (context, state) {})),
     );
   }
 
-  GridView functions(Size size) {
-    return GridView(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, crossAxisSpacing: 10),
+  Widget functions(Size size) {
+    return Stack(
+      alignment: Alignment.center,
       children: [
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(
-                                value: BlocProvider.of<DisabledPersonBloc>(
-                                    context)),
-                            BlocProvider(create: (_) => DeliveryServiceBloc())
-                          ],
-                          child: const DeliveryService(),
-                        )));
-          },
-          child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: LinearGradient(colors: [
-                    Colors.blue[800] as Color,
-                    Colors.blue[600] as Color
-                  ])),
-              child: const Center(
-                  child: Text(
-                "Delivery Service",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ))),
-        ),
-        TextButton(
-          onPressed: () {
-            try {
-            
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => BlocProvider(
-                            create: (_) => ChatBloc(
-                                userID:
-                                    BlocProvider.of<DisabledPersonBloc>(context)
-                                        .data["id"]),
-                            child: const ChattingScreen(),
-                          )));
-            } catch (e) {
-              print(e);
-            }
-          },
-          child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: LinearGradient(colors: [
-                    Colors.blue[800] as Color,
-                    Colors.blue[600] as Color
-                  ])),
-              child: const Center(
-                  child: Text(
-                "Start Chatting",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ))),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const ChatBot()));
-          },
-          child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: LinearGradient(colors: [
-                    Colors.blue[800] as Color,
-                    Colors.blue[600] as Color
-                  ])),
-              child: const Center(
-                  child: Text(
-                "Ask the chat bot",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ))),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(
-                                value: BlocProvider.of<DisabledPersonBloc>(
-                                    context)),
-                            BlocProvider(create: (_) => OrderFoodBloc())
-                          ],
-                          child: const OrderFoodScreen(),
-                        )));
-          },
-          child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: LinearGradient(colors: [
-                    Colors.blue[800] as Color,
-                    Colors.blue[600] as Color
-                  ])),
-              child: const Center(
-                  child: Text(
-                "Order Foor",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ))),
-        ),
-        SizedBox(height: size.height * 0.0001)
-      ],
-    );
-  }
-
-  Column intro(Size size) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-                onPressed: () {
-                  globalKey.currentState!.openDrawer();
-                },
-                icon: const Icon(Icons.settings)),
+            SizedBox(
+              width: size.width,
+              height: size.height * 0.5,
+              child: SvgPicture.asset(
+                "assets/top.svg",
+                fit: BoxFit.fill,
+              ),
+            ),
+            SizedBox(
+              width: size.width,
+              height: size.height * 0.5,
+              child: SvgPicture.asset(
+                "assets/bottom.svg",
+                fit: BoxFit.fill,
+              ),
+            )
           ],
         ),
-        const Text("Welcome to your safe space",
-            style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
-        SizedBox(
-          height: size.height * 0.02,
-        ),
-        const Text("Here's the list of every function you can make",
-            style: TextStyle(fontSize: 18, color: Colors.white)),
-      ],
-    );
-  }
-
-  ListView body(Size size, Widget intro, Widget body) {
-    return ListView(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-            Colors.blue[800] as Color,
-            Colors.blue[600] as Color
-          ])),
-          width: size.width,
-          height: size.height * 0.3,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: intro,
+        Positioned(
+            top: size.height * 0.02,
+            left: size.width * 0.05,
+            child: SafeArea(
+              child: Column(
+                children: const [
+                  Text("All You Need",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40)),
+                  Text("In One Place",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20)),
+                ],
+              ),
+            )),
+        Positioned(
+            top: size.height * 0.02,
+            right: size.width * 0.03,
+            child: SafeArea(
+                child: IconButton(
+                    onPressed: () {
+                      globalKey.currentState!.openDrawer();
+                    },
+                    icon: const Icon(
+                      Icons.settings,
+                      color: Colors.blue,
+                      size: 40,
+                    )))),
+        Positioned(
+          top: size.height * 0.2,
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blueAccent.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+                color: Colors.white),
+            height: size.height * 0.8,
+            width: size.width * 0.9,
+            child: GridView(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, crossAxisSpacing: 10),
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(
+                                        value:
+                                            BlocProvider.of<DisabledPersonBloc>(
+                                                context)),
+                                    BlocProvider(
+                                        create: (_) => DeliveryServiceBloc())
+                                  ],
+                                  child: const DeliveryService(),
+                                )));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue[800] as Color,
+                            Colors.blue[600] as Color
+                          ])),
+                      child: const Center(
+                          child: Text(
+                        "Delivery Service",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ))),
+                ),
+                TextButton(
+                  onPressed: () {
+                    try {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => BlocProvider(
+                                    create: (_) => ChatBloc(
+                                        userID:
+                                            BlocProvider.of<DisabledPersonBloc>(
+                                                    context)
+                                                .data["id"]),
+                                    child: const ChattingScreen(),
+                                  )));
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue[800] as Color,
+                            Colors.blue[600] as Color
+                          ])),
+                      child: const Center(
+                          child: Text(
+                        "Start Chatting",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ))),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const ChatBot()));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue[800] as Color,
+                            Colors.blue[600] as Color
+                          ])),
+                      child: const Center(
+                          child: Text(
+                        "Ask the chat bot",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ))),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(
+                                        value:
+                                            BlocProvider.of<DisabledPersonBloc>(
+                                                context)),
+                                    BlocProvider(create: (_) => OrderFoodBloc())
+                                  ],
+                                  child: const OrderFoodScreen(),
+                                )));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue[800] as Color,
+                            Colors.blue[600] as Color
+                          ])),
+                      child: const Center(
+                          child: Text(
+                        "Order Foor",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ))),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context)=>BookApointment()));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue[800] as Color,
+                            Colors.blue[600] as Color
+                          ])),
+                      child: const Center(
+                          child: Text(
+                        "Book Appointment",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ))),
+                ),
+                SizedBox(height: size.height * 0.0001)
+              ],
+            ),
           ),
-        ),
-        Container(
-          height: size.height * 0.7,
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-          child: body,
         ),
       ],
     );

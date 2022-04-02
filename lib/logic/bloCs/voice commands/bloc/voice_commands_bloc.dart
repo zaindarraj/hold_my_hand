@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:hold_my_hand/classes/speech_to_text.dart';
+import 'package:hold_my_hand/presentation/disabled%20person%20screens/book_apointment.dart';
 import 'package:meta/meta.dart';
 
 part 'voice_commands_event.dart';
@@ -40,7 +41,11 @@ class VoiceCommandsBloc extends Bloc<VoiceCommandsEvent, VoiceCommandsState> {
               emit(StartChatting());
             } else if (speechToText.lastWords == "help") {
               emit(ChatBot());
-            } else {
+            } else if (speechToText.lastWords == "request delivery") {
+              emit(Delivery());
+            }else if (speechToText.lastWords == "book appointment") {
+              emit(Appointment());
+            }else {
               emit(UnknownCommand());
             }
           });
