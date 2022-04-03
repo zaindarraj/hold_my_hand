@@ -2,10 +2,6 @@ part of 'admin_bloc.dart';
 
 abstract class AdminEvent {}
 
-class DeleteUser extends AdminEvent {
-  String email;
-  DeleteUser({required this.email});
-}
 
 class DeleteBenefector extends AdminEvent {
   String email;
@@ -38,15 +34,6 @@ class AddUser extends AdminEvent {
       required this.password});
 }
 
-class GetUsersList extends AdminEvent {}
-
-class GetBenefactorList extends AdminEvent {}
-
-class Approve extends AdminEvent {
-  String userID;
-  String order;
-  Approve({required this.order, required this.userID});
-}
 
 class GetCenters extends AdminEvent {}
 

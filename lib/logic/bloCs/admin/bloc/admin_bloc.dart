@@ -17,56 +17,12 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         } else {
           emit(Error(error: response));
         }
-      } else if (event is DeleteUser) {
-        emit(Loading());
-        String response = await API.deleteUser(event.email);
-        if (response == oK) {
-          emit(Done(message: oK));
-        } else {
-          emit(Error(error: response));
-        }
-      } else if (event is GetUsersList) {
-        emit(Loading());
-        dynamic response = await API.getUsersList();
-        if (response == noUsers) {
-          emit(NoUsers());
-        } else if (response == serverError) {
-          emit(Error(error: response));
-        } else {
-          emit(UserListReady(listOfUser: response));
-        }
-      } else if (event is GetBenefactorList) {
-        emit(Loading());
-        dynamic response = await API.getBenefactorsList();
-        if (response == noUsers) {
-          emit(NoUsers());
-        } else if (response == serverError) {
-          emit(Error(error: response));
-        } else if (response.runtimeType == List<Map<dynamic, dynamic>>) {
-          emit(BenefactorListReady(list: response));
-        }
-      } else if (event is DeleteBenefector) {
-        String response = await API.deleteBenefactor(event.email);
-        if (response == oK) {
-          emit(Done(message: oK));
-        } else {
-          emit(Error(error: response));
-        }
-      } else if (event is Approve) {
-        emit(Loading());
-        dynamic response = await API.approve(event.userID, event.order);
-        if (response == oK) {
-          emit(Done(message: oK));
-        } else {
-          emit(Error(error: response));
-        }
-      } else if (event is AddCenter) {
+      }  else if (event is AddCenter) {
         dynamic response = await API.addCenter(event.name);
-        emit(Done(message:  response));
-
-//api
+        emit(Done(message: response));
       } else if (event is DeleteCenter) {
-//api
+        dynamic response = await API.deleteCener(event.centerID);
+        emit(Done(message: response));
       }
     });
   }

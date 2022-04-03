@@ -84,6 +84,44 @@ class API {
     }
   }
 
+   static Future<String> deleteCener(String centerID) async {
+    try {
+      Response response = await post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'id': centerID
+        }),
+      );
+      if (response.statusCode == 200) {
+        final jsonMap = jsonDecode(response.body);
+        if (jsonMap["code"] == "1") {
+          return "Center deleted succefully.";
+        }
+      }
+      return "Center not deleted, please try again.";
+    } catch (_) {
+      return "Center not deleted, please try again.";
+    }
+  }
+static Future<void> approveRequest(String benID, String ID) async {
+    try {
+      Response response = await post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'benID': benID,
+          'serviceID' : ID
+        }),
+      );
+      
+    } catch (_) {
+    }
+  }
   //sign ups are used to add users/benefectors as well
   static Future<dynamic> signUpUser(String email, String password, String fName,
       String lName, String disablity) async {
@@ -148,72 +186,9 @@ class API {
     }
   }
 
-  //approving users
-  static Future<dynamic> getUsersList() async {
-    try {
-      Response response =
-          await post(Uri.parse(url + "/show_watting_disability_users.php"))
-              .timeout(const Duration(seconds: 9));
-      dynamic jsonDecoded = json.decode(response.body);
-      if (response.statusCode == 200) {
-        if (jsonDecoded.runtimeType == List<dynamic>) {
-          List<dynamic> list = jsonDecoded;
-          return list.map((e) => Map.from(e)).toList();
-        } else {
-          return noUsers;
-        }
-      }
-      return serverError;
-    } catch (_) {
-      return serverError;
-    }
-  }
 
-  static Future<dynamic> getBenefactorsList() async {
-    try {
-      Response response =
-          await post(Uri.parse(url + "/show_watting_benefactors.php"))
-              .timeout(const Duration(seconds: 9));
-      print(response.statusCode);
-      dynamic jsonDecoded = json.decode(response.body);
-      if (response.statusCode == 200) {
-        if (jsonDecoded.runtimeType == List<dynamic>) {
-          List<dynamic> list = jsonDecoded;
-          return list.map((e) => Map.from(e)).toList();
-        } else {
-          return noUsers;
-        }
-      }
-      return serverError;
-    } catch (_) {
-      return serverError;
-    }
-  }
+ 
 
-  //will change with backend api changes
-  static Future<dynamic> approve(String userID, String order) async {
-    try {
-      Response response = await post(
-        Uri.parse(url + "/approve_reject_user.php"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{'user_id': userID, "order": order}),
-      ).timeout(const Duration(seconds: 9));
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonMap = Map.from(jsonDecode(response.body));
-        if (jsonMap["code"] == 1) {
-          return oK;
-        } else {
-          return jsonMap["message"] as String;
-        }
-      } else {
-        return serverError;
-      }
-    } catch (_) {
-      return serverError;
-    }
-  }
 
   static Future<dynamic> deleteUser(String email) async {
     try {
@@ -227,10 +202,10 @@ class API {
       if (response.statusCode == 200) {
         Map<String, String> jsonMap = Map.from(jsonDecode(response.body));
 
-        if (jsonMap["message"] == oK) {
+        if (jsonMap["code"] == "1") {
           return oK;
         } else {
-          return jsonMap["message"] as String;
+          return serverError;
         }
       }
       return serverError;
@@ -239,25 +214,7 @@ class API {
     }
   }
 
-  static Future<dynamic> getRequest(int userID) async {
-    try {
-      Response response = await post(
-        Uri.parse(url + "/delete_user.php"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{'user_id': userID}),
-      );
-      if (response.statusCode == 200) {
-        List<Map<String, dynamic>> jsonMap = jsonDecode(response.body);
-        return jsonMap;
-      } else {
-        return serverError;
-      }
-    } catch (_) {
-      return serverError;
-    }
-  }
+
 
   static Future<dynamic> setServices(
       int userID, String list, String content) async {
@@ -284,54 +241,8 @@ class API {
     }
   }
 
-  static Future<String> approveRequest(
-      int userID, int serviceID, bool approve) async {
-    try {
-      Response response = await post(
-        Uri.parse(url + "/delete_user.php"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'user_id': userID,
-          'service_id': serviceID,
-          "order": approve ? 1 : 0
-        }),
-      );
-      if (response.statusCode == 200) {
-        Map<String, dynamic> map = jsonDecode(response.body);
-        return map["message"];
-      } else {
-        return serverError;
-      }
-    } catch (_) {
-      return serverError;
-    }
-  }
 
-  static Future<dynamic> deleteBenefactor(String userID) async {
-    try {
-      Response response = await post(
-        Uri.parse(url + "/delete_user.php"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{'user_id': userID}),
-      ).timeout(const Duration(seconds: 9));
-      if (response.statusCode == 200) {
-        Map<String, String> jsonMap = Map.from(jsonDecode(response.body));
-
-        if (jsonMap["message"] == oK) {
-          return oK;
-        } else {
-          return jsonMap["message"] as String;
-        }
-      }
-      return serverError;
-    } catch (_) {
-      return serverError;
-    }
-  }
+  
 
   static Future<dynamic> signIn(String email, String password) async {
     try {

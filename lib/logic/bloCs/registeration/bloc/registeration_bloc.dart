@@ -97,7 +97,6 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
                 await flutterSecureStorage.setState("0");
                
                 int accountType = response["data"]["user_type"];
-                print(accountType);
                   if (accountType == 1) {
                     emit(User(data: response["data"]));
                   } else if (accountType == 2) {

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hold_my_hand/consts.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart' as admin;
 import 'package:hold_my_hand/logic/bloCs/disabled%20person/bloc/disabled_person_bloc.dart';
+import 'package:hold_my_hand/logic/bloCs/location/bloc/location_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/registeration/bloc/registeration_bloc.dart';
 import 'package:hold_my_hand/logic/bloCs/voice%20commands/bloc/voice_commands_bloc.dart';
 import 'package:hold_my_hand/methods.dart';
@@ -79,7 +80,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         } else if (state is Benefector) {
           benefectorData = state.data;
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const MainBenefactorScreen()));
+              MaterialPageRoute(builder: (context) =>MultiBlocProvider(
+                        providers: [
+                          BlocProvider<LocationBloc>(
+                            create: (BuildContext context) =>
+                              LocationBloc(),
+                          ),
+                          BlocProvider<RegisterationBloc>(
+                            create: (BuildContext context) =>
+                              RegisterationBloc(),
+                          ),
+                        ],
+                        child: const MainBenefactorScreen(),
+                      )));
         } else if (state is Admin) {
           Navigator.pushReplacement(
               context,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hold_my_hand/classes/api.dart';
 import 'package:hold_my_hand/logic/bloCs/admin/bloc/admin_bloc.dart';
 
 import '../../methods.dart';
@@ -45,23 +46,25 @@ class _DeleteState extends State<Delete> {
             ],
           ),
           Positioned(
-            top: 0,
-            left: 0,
-
+              top: 0,
+              left: 0,
               child: SafeArea(
                 child: Row(
-            children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.arrow_back)),
-                    Text("Delete a User or a Benefactor",
-                    style: TextStyle(color: Colors.white,
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold),)
-            ],
-          ),
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.arrow_back)),
+                    Text(
+                      "Delete a User or a Benefactor",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
               )),
           Container(
             width: size.width * 0.9,
@@ -95,9 +98,20 @@ class _DeleteState extends State<Delete> {
                       isUser = !(newVal as bool);
                       setState(() {});
                     }),
-                IconButton(onPressed: (){
-
-                }, icon: const Icon(Icons.delete_forever_rounded,color: Colors.blue,size: 30,))
+                IconButton(
+                    onPressed: () async {
+                      if (email.text.isNotEmpty) {
+                        await API.deleteUser(email.text);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Please fill all fields")));
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.delete_forever_rounded,
+                      color: Colors.blue,
+                      size: 30,
+                    ))
               ],
             ),
           )

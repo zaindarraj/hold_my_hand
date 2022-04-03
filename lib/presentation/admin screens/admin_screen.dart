@@ -199,7 +199,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                     BlocProvider.of<AdminBloc>(context).add(
                                         DeleteCenter(
                                             centerID: state.list[index]
-                                                ["center_id"]));
+                                                ["id"]));
                                   },
                                   dense: true,
                                   textColor: Colors.green,

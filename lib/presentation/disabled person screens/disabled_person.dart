@@ -407,6 +407,27 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ))),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context)=>BookApointment()));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue[800] as Color,
+                            Colors.blue[600] as Color
+                          ])),
+                      child: const Center(
+                          child: Text(
+                        "Medical Advice",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ))),
+                ),
                 SizedBox(height: size.height * 0.0001)
               ],
             ),
