@@ -13,6 +13,7 @@ import 'package:hold_my_hand/presentation/disabled%20person%20screens/book_apoin
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chat_bot.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/chatting.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/delivery_service.dart';
+import 'package:hold_my_hand/presentation/disabled%20person%20screens/medical_advice.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/order_food.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
@@ -409,10 +410,19 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                  Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context)=>BookApointment()));
+                            builder: (_) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(
+                                        value:
+                                            BlocProvider.of<DisabledPersonBloc>(
+                                                context)),
+                                 
+                                  ],
+                                  child: const MedicalAdviceScreen(),
+                                )));
                   },
                   child: Container(
                       decoration: BoxDecoration(

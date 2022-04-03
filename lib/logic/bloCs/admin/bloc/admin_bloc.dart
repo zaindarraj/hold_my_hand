@@ -17,7 +17,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         } else {
           emit(Error(error: response));
         }
-      }  else if (event is AddCenter) {
+      } else if (event is AddCenter) {
         dynamic response = await API.addCenter(event.name);
         emit(Done(message: response));
       } else if (event is DeleteCenter) {

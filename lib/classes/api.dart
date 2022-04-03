@@ -213,7 +213,29 @@ static Future<void> approveRequest(String benID, String ID) async {
       return serverError;
     }
   }
-
+static Future<String> medicalAdvice(
+      String userID, String injury) async {
+    try {
+      Response response = await post(
+        Uri.parse(url + "/delete_user.php"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': userID,
+          'injury': injury,
+        }),
+      );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonMap = jsonDecode(response.body);
+        return jsonMap["message"];
+      } else {
+        return serverError;
+      }
+    } catch (_) {
+      return serverError;
+    }
+  }
 
 
   static Future<dynamic> setServices(

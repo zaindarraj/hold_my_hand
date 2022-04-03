@@ -146,33 +146,5 @@ class _DeliveryServiceState extends State<DeliveryService> {
     );
   }
 
-  Widget intro(Size size, BuildContext context) {
-    return Container(
-      width: size.width,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.blue[800] as Color, Colors.blue[600] as Color])),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Delivery Service !",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.of(context).textScaleFactor * 24),
-          ),
-          Text(
-            "Enter your infromation here",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.of(context).textScaleFactor * 20),
-          )
-        ],
-      ),
-    );
-  }
+
 }

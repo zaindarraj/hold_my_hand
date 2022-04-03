@@ -35,13 +35,12 @@ class MyApp extends StatelessWidget {
             ),
             primaryColor: Colors.blue[800] as Color,
             iconTheme: const IconThemeData(color: Colors.white)),
-     /*  home: BlocProvider(
+       home: BlocProvider(
           create: (context) => RegisterationBloc()
             ..add(CheckFlutterStorage())
             ..add(CheckBio()),
           child: const RegisterScreen(),
-        ),*/
-        home: MedicalAdviceScreen(),
+        ),
       ),
     );
   }

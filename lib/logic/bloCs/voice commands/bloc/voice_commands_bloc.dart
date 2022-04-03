@@ -30,7 +30,7 @@ class VoiceCommandsBloc extends Bloc<VoiceCommandsEvent, VoiceCommandsState> {
         } else {
           emit(Started());
           await speechToText.startListening();
-          await Future.delayed(const Duration(seconds: 5), () {
+          await Future.delayed(const Duration(seconds: 5), () async {
             if (speechToText.speechToText.isListening) {
               speechToText.stopListening();
             }
@@ -43,9 +43,9 @@ class VoiceCommandsBloc extends Bloc<VoiceCommandsEvent, VoiceCommandsState> {
               emit(ChatBot());
             } else if (speechToText.lastWords == "request delivery") {
               emit(Delivery());
-            }else if (speechToText.lastWords == "book appointment") {
+            } else if (speechToText.lastWords == "book appointment") {
               emit(Appointment());
-            }else {
+            } else {
               emit(UnknownCommand());
             }
           });
