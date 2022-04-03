@@ -92,7 +92,6 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
             } else {
               dynamic response = await API.signIn(
                   map["email"] as String, map["password"] as String);
-              print(response);
               if (response.runtimeType != String) {
                 await flutterSecureStorage.setState("0");
                

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:hold_my_hand/consts.dart';
@@ -84,16 +85,14 @@ class API {
     }
   }
 
-   static Future<String> deleteCener(String centerID) async {
+  static Future<String> deleteCener(String centerID) async {
     try {
       Response response = await post(
         Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
-          'id': centerID
-        }),
+        body: jsonEncode(<String, String>{'id': centerID}),
       );
       if (response.statusCode == 200) {
         final jsonMap = jsonDecode(response.body);
@@ -106,22 +105,19 @@ class API {
       return "Center not deleted, please try again.";
     }
   }
-static Future<void> approveRequest(String benID, String ID) async {
+
+  static Future<void> approveRequest(String benID, String ID) async {
     try {
       Response response = await post(
         Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
-          'benID': benID,
-          'serviceID' : ID
-        }),
+        body: jsonEncode(<String, String>{'benID': benID, 'serviceID': ID}),
       );
-      
-    } catch (_) {
-    }
+    } catch (_) {}
   }
+
   //sign ups are used to add users/benefectors as well
   static Future<dynamic> signUpUser(String email, String password, String fName,
       String lName, String disablity) async {
@@ -186,10 +182,6 @@ static Future<void> approveRequest(String benID, String ID) async {
     }
   }
 
-
- 
-
-
   static Future<dynamic> deleteUser(String email) async {
     try {
       Response response = await post(
@@ -213,8 +205,8 @@ static Future<void> approveRequest(String benID, String ID) async {
       return serverError;
     }
   }
-static Future<String> medicalAdvice(
-      String userID, String injury) async {
+
+  static Future<String> medicalAdvice(String userID, String injury) async {
     try {
       Response response = await post(
         Uri.parse(url + "/delete_user.php"),
@@ -237,6 +229,30 @@ static Future<String> medicalAdvice(
     }
   }
 
+  static Future<String> bookAppointment(
+      String userID, String appointment, String date) async {
+    try {
+      Response response = await post(
+        Uri.parse(url + "/delete_user.php"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': userID,
+          'appointment': appointment,
+          'date': date
+        }),
+      );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonMap = jsonDecode(response.body);
+        return jsonMap["message"];
+      } else {
+        return serverError;
+      }
+    } catch (_) {
+      return serverError;
+    }
+  }
 
   static Future<dynamic> setServices(
       int userID, String list, String content) async {
@@ -263,8 +279,25 @@ static Future<String> medicalAdvice(
     }
   }
 
-
-  
+  static Future<List<Map<String, dynamic>> ?> getCenters() async {
+    try {
+      Response response = await post(
+        Uri.parse(url + "/delete_user.php"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{}),
+      );
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> jsonList = jsonDecode(response.body);
+        return jsonList;
+      } else {
+        return null;
+      }
+    } catch (_) {
+      return null;
+    }
+  }
 
   static Future<dynamic> signIn(String email, String password) async {
     try {

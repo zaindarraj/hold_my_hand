@@ -45,7 +45,9 @@ class VoiceCommandsBloc extends Bloc<VoiceCommandsEvent, VoiceCommandsState> {
               emit(Delivery());
             } else if (speechToText.lastWords == "book appointment") {
               emit(Appointment());
-            } else {
+            }  else if (speechToText.lastWords == "medical advice") {
+              emit(Appointment());
+            }  else {
               emit(UnknownCommand());
             }
           });

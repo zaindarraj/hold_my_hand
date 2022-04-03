@@ -22,11 +22,10 @@ class _AddBenefactorScreenState extends State<AddBenefactorScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: BlocConsumer<AdminBloc, AdminState>(builder: (context, state) {
-    
       return body(size, context);
     }, listener: (context, state) {
-      if(state is Done){
-         ScaffoldMessenger.of(context)
+      if (state is Done) {
+        ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Done")));
       }
       if (state is Error) {
@@ -79,7 +78,7 @@ class _AddBenefactorScreenState extends State<AddBenefactorScreen> {
                         "Add a Benefactor to the database !",
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 23,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -139,14 +138,14 @@ class _AddBenefactorScreenState extends State<AddBenefactorScreen> {
                         label: Text("Last Name"),
                       ),
                     ),
-                 
                     TextButton(
                         onPressed: () {
                           if (email.text.isNotEmpty &&
                               password.text.isNotEmpty &&
                               lastName.text.isNotEmpty &&
-                              firstName.text.isNotEmpty ) {
-                            BlocProvider.of<AdminBloc>(context).add(AddBenefector(
+                              firstName.text.isNotEmpty) {
+                            BlocProvider.of<AdminBloc>(context)
+                                .add(AddBenefector(
                               fname: firstName.text,
                               lnamel: lastName.text,
                               email: email.text,

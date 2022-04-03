@@ -5,7 +5,6 @@ import 'package:hold_my_hand/classes/location.dart';
 import 'package:hold_my_hand/consts.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
-
 class RecordServiceScreen extends StatefulWidget {
   const RecordServiceScreen({Key? key}) : super(key: key);
 
@@ -100,7 +99,7 @@ class _RecordServiceScreenState extends State<RecordServiceScreen> {
             Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow:const  [
+                  boxShadow: const [
                     BoxShadow(
                         spreadRadius: 3,
                         offset: Offset(3, 0),

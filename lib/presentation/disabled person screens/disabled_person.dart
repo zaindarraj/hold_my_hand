@@ -149,8 +149,19 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                     MaterialPageRoute(
                         builder: (_) => BlocProvider(
                               create: (context) => ChatBloc(
-                                  userID: disabledPersonBloc.data["userID"]),
+                                  userID: disabledPersonBloc.data["id"]),
                               child: const ChattingScreen(),
+                            )));
+              }
+              if (state is voice_commands.MedicalAdvice) {
+                 Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider.value(value: disabledPersonBloc)
+                              ],
+                              child: const MedicalAdviceScreen(),
                             )));
               }
               if (state is voice_commands.ChatBot) {
@@ -167,10 +178,15 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.error)));
               }else if (state is voice_commands.Appointment) {
-                Navigator.push(
+               Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => const BookApointment()));
+                        builder: (_) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider.value(value: disabledPersonBloc)
+                              ],
+                              child: const BookApointment(),
+                            )));
               }else if (state is voice_commands.Delivery) {
                 Navigator.push(
                     context,
@@ -382,17 +398,26 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                           ])),
                       child: const Center(
                           child: Text(
-                        "Order Foor",
+                        "Order Food",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ))),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context)=>BookApointment()));
+                            builder: (_) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(
+                                        value:
+                                            BlocProvider.of<DisabledPersonBloc>(
+                                                context)),
+                                 
+                                  ],
+                                  child: const BookApointment(),
+                                )));
                   },
                   child: Container(
                       decoration: BoxDecoration(

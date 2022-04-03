@@ -23,6 +23,14 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       } else if (event is DeleteCenter) {
         dynamic response = await API.deleteCener(event.centerID);
         emit(Done(message: response));
+        
+      } else if (event is GetCenters) {
+        List<Map<String, dynamic>>? respnse = await API.getCenters();
+        if (respnse == null) {
+          emit(Error(error: serverError));
+        } else {
+          emit(Centers(list: respnse));
+        }
       }
     });
   }

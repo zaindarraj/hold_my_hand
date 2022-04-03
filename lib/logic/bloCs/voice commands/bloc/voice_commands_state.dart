@@ -21,3 +21,4 @@ class Started extends VoiceCommandsState{}
 class Delivery extends VoiceCommandsState{}
 
 class Appointment extends VoiceCommandsState{}
+class MedicalAdvice extends VoiceCommandsState{}

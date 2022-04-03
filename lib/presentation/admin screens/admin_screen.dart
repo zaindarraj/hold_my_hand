@@ -9,7 +9,6 @@ import 'package:hold_my_hand/presentation/admin%20screens/adding_user.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/delete.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
-
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
 
@@ -161,6 +160,8 @@ class _AdminScreenState extends State<AdminScreen> {
               if (state is Done) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.message)));
+
+                BlocProvider.of<AdminBloc>(context).add(GetCenters());
               }
             }, builder: (context, state) {
               if (state is Centers) {
@@ -198,8 +199,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                   onTap: () {
                                     BlocProvider.of<AdminBloc>(context).add(
                                         DeleteCenter(
-                                            centerID: state.list[index]
-                                                ["id"]));
+                                            centerID: state.list[index]["id"]));
                                   },
                                   dense: true,
                                   textColor: Colors.green,
@@ -354,8 +354,6 @@ class _AdminScreenState extends State<AdminScreen> {
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ))),
               ),
-             
-             
             ],
           ),
         ),

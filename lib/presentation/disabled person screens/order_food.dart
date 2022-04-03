@@ -27,13 +27,13 @@ class _OrderFoodScreenState extends State<OrderFoodScreen> {
         height: size.height,
         child: SingleChildScrollView(
           child: BlocConsumer<OrderFoodBloc, OrderFoodState>(
-            listener: (context, state) {},
-            builder: (context, state) {
+            listener: (context, state) {
               if (state is Done) {
-                return const Center(
-                  child: Text("DONE"),
-                );
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Done")));
               }
+            },
+            builder: (context, state) {
               return Stack(
                 alignment: Alignment.centerLeft,
                 children: [
@@ -62,11 +62,16 @@ class _OrderFoodScreenState extends State<OrderFoodScreen> {
                       top: 0,
                       left: 0,
                       child: SafeArea(
-                          child: IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.arrow_back)))),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(Icons.arrow_back)),
+                                  Text("Order Food", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23),)
+                            ],
+                          ))),
                   Container(
                     width: size.width * 0.85,
                     height: size.height * 0.5,
@@ -131,7 +136,8 @@ class _OrderFoodScreenState extends State<OrderFoodScreen> {
                                                       Navigator.pop(context);
                                                     },
                                                     child: Container(
-                                                      padding: EdgeInsets.all(18),
+                                                      padding:
+                                                          EdgeInsets.all(18),
                                                       color: Colors.blue,
                                                       alignment:
                                                           Alignment.center,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hold_my_hand/classes/api.dart';
+import 'package:hold_my_hand/presentation/benefactor/record_service.dart';
 import 'package:hold_my_hand/presentation/registerScreen.dart';
 
 import '../../logic/bloCs/location/bloc/location_bloc.dart';
@@ -15,6 +16,7 @@ class MainBenefactorScreen extends StatefulWidget {
 }
 
 class _MainBenefactorScreenState extends State<MainBenefactorScreen> {
+  GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   String getService(String intVal) {
     if (intVal == "1") {
       return "Food Delivery";
@@ -35,92 +37,116 @@ class _MainBenefactorScreenState extends State<MainBenefactorScreen> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      key: key,
       drawer: Drawer(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  height: size.height * 0.3,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                    Colors.blue[800] as Color,
-                    Colors.blue[600] as Color
-                  ])),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(18),
+              height: size.height * 0.3,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Colors.blue[800] as Color,
+                Colors.blue[600] as Color
+              ])),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          const Text(
-                            "Name : ",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Text(benefectorData!["name"])
-                        ],
+                      const Text(
+                        "Name : ",
+                        style: TextStyle(color: Colors.white),
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "User ID : ",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Text(benefectorData!["id"].toString())
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Email : ",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Text(benefectorData!["email"])
-                        ],
-                      ),
+                      Text(benefectorData!["name"])
                     ],
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  child: BlocProvider(
-                    create: (context) => LocationBloc(),
-                    child: BlocConsumer<LocationBloc, LocationState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return CheckboxListTile(
-                            title: const Text("Share your location"),
-                            value: state is Enabled ? true : false,
-                            onChanged: (value) {
-                              if (value == true) {
-                                BlocProvider.of<LocationBloc>(context).add(
-                                    EnableLocation(
-                                        userID: benefectorData!["id"]
-                                            .toString()));
-                              } else {
-                                BlocProvider.of<LocationBloc>(context).add(
-                                    DisableLocation(
-                                        userID: benefectorData!["id"]
-                                            .toString()));
-                              }
-                            });
-                      },
-                    ),
+                  Row(
+                    children: [
+                      const Text(
+                        "User ID : ",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(benefectorData!["id"].toString())
+                    ],
                   ),
-                ),
-                Expanded(
-                    child: Container(
-                  alignment: Alignment.bottomLeft,
-                  child: TextButton(
-                    child: const Text("Sign Out"),
-                    onPressed: () {
-                      BlocProvider.of<RegisterationBloc>(context)
-                          .add(SignOut());
-                    },
+                  Row(
+                    children: [
+                      const Text(
+                        "Email : ",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(benefectorData!["email"])
+                    ],
                   ),
-                ))
-              ],
+                ],
+              ),
             ),
-          ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RecordServiceScreen()));
+              },
+              child: Container(
+                padding: EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: const Text(
+                  "Recored Services ",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Text(benefectorData!["email"]),
+            Container(
+              padding: const EdgeInsets.all(18),
+              child: BlocProvider(
+                create: (context) => LocationBloc(),
+                child: BlocConsumer<LocationBloc, LocationState>(
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    return CheckboxListTile(
+                        title: const Text("Share your location"),
+                        value: state is Enabled ? true : false,
+                        onChanged: (value) {
+                          if (value == true) {
+                            BlocProvider.of<LocationBloc>(context).add(
+                                EnableLocation(
+                                    userID: benefectorData!["id"].toString()));
+                          } else {
+                            BlocProvider.of<LocationBloc>(context).add(
+                                DisableLocation(
+                                    userID: benefectorData!["id"].toString()));
+                          }
+                        });
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+                child: BlocListener<RegisterationBloc, RegisterationState>(
+              listener: (context, state) {
+               if(state is RegisterationInitial){
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=>const RegisterScreen()));
+               }
+              },
+              child: Container(
+                alignment: Alignment.bottomLeft,
+                child: TextButton(
+                  child: const Text("Sign Out"),
+                  onPressed: () {
+                    BlocProvider.of<RegisterationBloc>(context).add(SignOut());
+                  },
+                ),
+              ),
+            ))
+          ],
+        ),
+      ),
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -146,31 +172,39 @@ class _MainBenefactorScreenState extends State<MainBenefactorScreen> {
             ],
           ),
           Positioned(
-            top: 0,
-            left: 0,
-
-            child: SafeArea(
-              
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                     const Text("Benefactor Screen",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 30),),
-                      IconButton(onPressed: (){
-
-                      }, icon: const Icon(Icons.settings,size: 30,color: Colors.blue,))
-                    
-                    ],
+              top: 0,
+              left: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Benefactor Screen",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              key.currentState!.openDrawer();
+                            },
+                            icon: const Icon(
+                              Icons.settings,
+                              size: 30,
+                              color: Colors.blue,
+                            ))
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )),
+              )),
           FutureBuilder<List<Map<String, dynamic>>?>(
-              future: API.getNearbyUsers(benefectorData!["id"]),
+              future: API.getNearbyUsers(benefectorData!["id"].toString()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hold_my_hand/classes/api.dart';
+
+import '../../logic/bloCs/disabled person/bloc/disabled_person_bloc.dart';
 
 class BookApointment extends StatefulWidget {
   const BookApointment({Key? key}) : super(key: key);
@@ -12,6 +15,7 @@ class BookApointment extends StatefulWidget {
 class _BookApointmentState extends State<BookApointment> {
   DateTime? picked;
   DateTime selectedDate = DateTime.now();
+  TextEditingController appointment = TextEditingController();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -27,6 +31,8 @@ class _BookApointmentState extends State<BookApointment> {
 
   @override
   Widget build(BuildContext context) {
+    String userID =
+        BlocProvider.of<DisabledPersonBloc>(context).data["id"].toString();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -110,6 +116,7 @@ class _BookApointmentState extends State<BookApointment> {
                       ),
                     ),
                     TextField(
+                      controller: appointment,
                       decoration: InputDecoration(
                           label: Text("Appointment Type : "),
                           hintText: "e.g : Doctor's appointment, dentist etc"),
@@ -151,6 +158,15 @@ class _BookApointmentState extends State<BookApointment> {
                 bottom: 0,
                 child: IconButton(
                     onPressed: () async {
+                      if(appointment.text.isNotEmpty){
+                        String response = await API.bookAppointment(
+                          userID, appointment.text, selectedDate.toString());
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(response)));
+                      }else {
+                         ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Please fill all fields")));
+                      }
                     },
                     icon: const Icon(
                       Icons.arrow_forward,
