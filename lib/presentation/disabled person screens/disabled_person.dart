@@ -55,14 +55,16 @@ class _DisabledPersonScreenState extends State<DisabledPersonScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          const Text(
-                            "Name : ",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Text(disabledPersonBloc.data["name"])
-                        ],
+                      SafeArea(
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Name : ",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Text(disabledPersonBloc.data["name"])
+                          ],
+                        ),
                       ),
                       Row(
                         children: [

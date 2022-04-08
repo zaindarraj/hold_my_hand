@@ -167,7 +167,7 @@ class _RecordServiceScreenState extends State<RecordServiceScreen> {
                         onPressed: () async {
                           String message = await API.setServices(
                               benefectorData!["id"],
-                              services.toString(),
+                              services,
                               content.text);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text(message)));

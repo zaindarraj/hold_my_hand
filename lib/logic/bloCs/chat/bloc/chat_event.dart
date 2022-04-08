@@ -3,8 +3,8 @@ part of 'chat_bloc.dart';
 abstract class ChatEvent {}
 
 class SendMessage extends ChatEvent {
-  int senderID;
-  int receiverID;
+  String senderID;
+  String receiverID;
   String message;
   SendMessage(
       {required this.senderID,
@@ -14,7 +14,7 @@ class SendMessage extends ChatEvent {
 
 
 class ReadMessages extends ChatEvent {
-  int senderID;
-  int receiverID;
+  String senderID;
+  String receiverID;
   ReadMessages({required this.receiverID, required this.senderID});
 }

@@ -6,7 +6,7 @@ part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  int userID;
+  String userID;
   ChatBloc({required this.userID}) : super(ChatInitial()) {
     on<ChatEvent>((event, emit) async {
       if (event is ReadMessages) {

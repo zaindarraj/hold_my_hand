@@ -11,6 +11,7 @@ import 'package:hold_my_hand/methods.dart';
 import 'package:hold_my_hand/presentation/admin%20screens/admin_screen.dart';
 import 'package:hold_my_hand/presentation/benefactor/main_benefactor.dart';
 import 'package:hold_my_hand/presentation/disabled%20person%20screens/disabled_person.dart';
+
 Map<String, dynamic>? benefectorData;
 
 class RegisterScreen extends StatefulWidget {
@@ -58,8 +59,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return signInWidget(size);
             });
       }, listener: (context, state) async {
-       
-
         if (state is User) {
           Navigator.pushReplacement(
               context,
@@ -79,16 +78,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       )));
         } else if (state is Benefector) {
           benefectorData = state.data;
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>MultiBlocProvider(
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
                         providers: [
                           BlocProvider<LocationBloc>(
-                            create: (BuildContext context) =>
-                              LocationBloc(),
+                            create: (BuildContext context) => LocationBloc(),
                           ),
                           BlocProvider<RegisterationBloc>(
                             create: (BuildContext context) =>
-                              RegisterationBloc(),
+                                RegisterationBloc(),
                           ),
                         ],
                         child: const MainBenefactorScreen(),
@@ -119,40 +119,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             Column(
               children: [
-                SizedBox(width: size.width, height: size.height * 0.5,
-                
-                child: SvgPicture.asset("assets/top.svg", fit: BoxFit.fill, ),
-                )],
+                SizedBox(
+                  width: size.width,
+                  height: size.height * 0.5,
+                  child: SvgPicture.asset(
+                    "assets/top.svg",
+                    fit: BoxFit.fill,
+                  ),
+                )
+              ],
             ),
-             Positioned(
-              top: size.height*0.02,
-              left: size.width*0.05,
-              child: const SafeArea(
-              child: Text("Sign in",
-              
-              style: TextStyle(color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 40
-              )),
-            )),
             Positioned(
-             top: size.height*0.2,
+                top: size.height * 0.02,
+                left: size.width * 0.05,
+                child: const SafeArea(
+                  child: Text("Sign in",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40)),
+                )),
+            Positioned(
+              top: size.height * 0.2,
               child: Container(
                 height: size.height * 0.8,
-                width: size.width*0.8,
-                decoration:  BoxDecoration(
-                    boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-                  borderRadius:const BorderRadius.only( 
-                    topLeft: Radius.circular(20),
-                    topRight : Radius.circular(20)
-                  ),
+                width: size.width * 0.8,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
                   color: Colors.white,
                 ),
                 child: Column(
@@ -207,14 +210,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                color: Colors.blue[800] as Color,
-                                borderRadius: BorderRadius.circular(6)
-                                ),
-                                padding :EdgeInsets.all(18),
+                                    color: Colors.blue[800] as Color,
+                                    borderRadius: BorderRadius.circular(6)),
+                                padding: EdgeInsets.all(18),
                                 child: Text("Sign in",
                                     style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.white)),
+                                        fontSize: 17, color: Colors.white)),
                               ),
                             )
                           ],
@@ -243,37 +244,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
           alignment: Alignment.center,
           children: [
             Column(
-            children: [
-              SizedBox(width: size.width, height: size.height * 0.5,
-              
-              child: SvgPicture.asset("assets/top.svg", fit: BoxFit.fill, ),
-              )],
-          ),
-           Positioned(
-            top: size.height*0.02,
-            left: size.width*0.05,
-            child: const SafeArea(
-            child: Text("Sign Up",
-            
-            style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 40
-            )),
-          )),
+              children: [
+                SizedBox(
+                  width: size.width,
+                  height: size.height * 0.5,
+                  child: SvgPicture.asset(
+                    "assets/top.svg",
+                    fit: BoxFit.fill,
+                  ),
+                )
+              ],
+            ),
             Positioned(
-               top: size.height*0.2,
+                top: size.height * 0.02,
+                left: size.width * 0.05,
+                child: const SafeArea(
+                  child: Text("Sign Up",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40)),
+                )),
+            Positioned(
+              top: size.height * 0.2,
               child: Container(
                 height: size.height * 0.8,
-                width: size.width*0.9,
-                decoration:  BoxDecoration(
-                         boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
+                width: size.width * 0.9,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
@@ -310,13 +316,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         TextField(
                           controller: firstName,
                           decoration: const InputDecoration(
-                              label: Text("First Name"), icon: Icon(Icons.person)),
+                              label: Text("First Name"),
+                              icon: Icon(Icons.person)),
                         ),
                         TextField(
-                        
                           controller: lastName,
                           decoration: const InputDecoration(
-                              label: Text("Last Name"), icon: Icon(Icons.person)),
+                              label: Text("Last Name"),
+                              icon: Icon(Icons.person)),
                         ),
                         ToggleButtons(
                             selectedColor: Colors.blue,
@@ -335,7 +342,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   "Benefector",
                                   style: TextStyle(
                                     fontSize:
-                                        MediaQuery.textScaleFactorOf(context) * 12,
+                                        MediaQuery.textScaleFactorOf(context) *
+                                            12,
                                     color: Colors.blue[800] as Color,
                                   ),
                                 )),
@@ -349,18 +357,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Text(
                                         "Disabled",
                                         style: TextStyle(
-                                          fontSize: MediaQuery.textScaleFactorOf(
-                                                  context) *
-                                              12,
+                                          fontSize:
+                                              MediaQuery.textScaleFactorOf(
+                                                      context) *
+                                                  12,
                                           color: Colors.blue[800] as Color,
                                         ),
                                       ),
                                       Text(
                                         "Person",
                                         style: TextStyle(
-                                          fontSize: MediaQuery.textScaleFactorOf(
-                                                  context) *
-                                              12,
+                                          fontSize:
+                                              MediaQuery.textScaleFactorOf(
+                                                      context) *
+                                                  12,
                                           color: Colors.blue[800] as Color,
                                         ),
                                       ),
@@ -379,76 +389,79 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               )
                             : Container(),
                         TextButton(
-                            onPressed: () {
-                              if (email.text.isNotEmpty &&
-                                  password.text.isNotEmpty &&
-                                  lastName.text.isNotEmpty &&
-                                  firstName.text.isNotEmpty &&
-                                  accountType.contains(true) &&
-                                  validateEmail(email.text) == null &&
-                                  isNumeric(password.text) == null) {
-                                if (accountType
-                                        .indexWhere((element) => element == true) ==
-                                    1) {
-                                  if (disability.text.isNotEmpty) {
-                                    BlocProvider.of<RegisterationBloc>(context)
-                                        .add(SignUp(
-                                      fName: firstName.text,
-                                      lName: lastName.text,
-                                      disabilityType: disability.text,
-                                      email: "email",
-                                      password: "password",
-                                      accountType: accountType.indexWhere(
-                                                  (element) => element == true) ==
-                                              1
-                                          ? "disabled person"
-                                          : "benefector",
-                                    ));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "please make sure you entered all the fields")));
-                                  }
-                                } else {
+                          onPressed: () {
+                            print(accountType
+                                    .indexWhere((element) => element == true) ==
+                                1);
+                            if (email.text.isNotEmpty &&
+                                password.text.isNotEmpty &&
+                                lastName.text.isNotEmpty &&
+                                firstName.text.isNotEmpty &&
+                                accountType.contains(true) &&
+                                validateEmail(email.text) == null &&
+                                isNumeric(password.text) == null) {
+                              if (accountType.indexWhere(
+                                      (element) => element == true) ==
+                                  1) {
+                                if (disability.text.isNotEmpty) {
                                   BlocProvider.of<RegisterationBloc>(context)
                                       .add(SignUp(
                                     fName: firstName.text,
                                     lName: lastName.text,
-                                    disabilityType: accountType.indexWhere(
-                                                (element) => element == true) ==
-                                            1
-                                        ? disability.text
-                                        : null,
-                                    email: "email",
-                                    password: "password",
+                                    disabilityType: disability.text,
+                                    email: email.text,
+                                    password: password.text,
                                     accountType: accountType.indexWhere(
                                                 (element) => element == true) ==
                                             1
                                         ? "disabled person"
-                                        : "benefactor",
+                                        : "benefector",
                                   ));
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "please make sure you entered all the fields")));
                                 }
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text("please fill all fields")));
+                                BlocProvider.of<RegisterationBloc>(context)
+                                    .add(SignUp(
+                                  fName: firstName.text,
+                                  lName: lastName.text,
+                                  disabilityType: accountType.indexWhere(
+                                              (element) => element == true) ==
+                                          1
+                                      ? disability.text
+                                      : null,
+                                  email: "email",
+                                  password: "password",
+                                  accountType: accountType.indexWhere(
+                                              (element) => element == true) ==
+                                          1
+                                      ? "disabled person"
+                                      : "benefactor",
+                                ));
                               }
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("please fill all fields")));
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
                                 color: Colors.blue[800] as Color,
-                                borderRadius: BorderRadius.circular(6)
-                                ),
-                                padding :EdgeInsets.all(18),
-                                child: Text("Sign Up",
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.white)),
-                              ),),
+                                borderRadius: BorderRadius.circular(6)),
+                            padding: EdgeInsets.all(18),
+                            child: Text("Sign Up",
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white)),
+                          ),
+                        ),
                         Text("Swipe to sign in >>>",
                             style: TextStyle(
-                              fontSize: MediaQuery.of(context).textScaleFactor * 16,
+                              fontSize:
+                                  MediaQuery.of(context).textScaleFactor * 16,
                               color: Colors.blue[800] as Color,
                             ))
                       ],

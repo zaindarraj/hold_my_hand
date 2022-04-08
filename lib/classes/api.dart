@@ -127,11 +127,11 @@ class API {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'email': email,
           'password': password,
           'name': fName + ' ' + lName,
-          'user_type': '1',
+          'user_type': 1,
           'disablity': disablity,
         }),
       ).timeout(const Duration(seconds: 10));
@@ -159,13 +159,13 @@ class API {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'email': email,
           'password': password,
-          'name': fName + " " + lName,
-          'user_type': '2'
+          'name': fName,
+          'user_type': 2
         }),
-      ).timeout(const Duration(seconds: 9));
+      );
       print(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonMap = Map.from(jsonDecode(response.body));
@@ -177,7 +177,8 @@ class API {
       } else {
         return serverError;
       }
-    } catch (_) {
+    } catch (e) {
+      print(e);
       return serverError;
     }
   }
@@ -255,7 +256,7 @@ class API {
   }
 
   static Future<dynamic> setServices(
-      int userID, String list, String content) async {
+      int userID, List<int> list, String content) async {
     try {
       Response response = await post(
         Uri.parse(url + "/delete_user.php"),
@@ -279,7 +280,7 @@ class API {
     }
   }
 
-  static Future<List<Map<String, dynamic>> ?> getCenters() async {
+  static Future<List<Map<String, dynamic>>?> getCenters() async {
     try {
       Response response = await post(
         Uri.parse(url + "/delete_user.php"),
@@ -317,7 +318,6 @@ class API {
         if (jsonMap["code"] != -1) {
           return Map<String, dynamic>.from(jsonMap);
         } else {
-          print(jsonMap["message"]);
           return jsonMap["message"];
         }
       } else {
@@ -357,7 +357,7 @@ class API {
     }
   }
 
-  static Future<dynamic> readMessages(int senderID, int receiverID) async {
+  static Future<dynamic> readMessages(String senderID, String receiverID) async {
     try {
       Response response = await post(
         Uri.parse(url + "/read_all_messages.php"),
@@ -420,7 +420,7 @@ class API {
       String userID, String from, String object) async {
     try {
       Response response = await post(
-        Uri.parse(url),
+        Uri.parse(url + "/RequestDelivery.php"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -430,6 +430,7 @@ class API {
           'object': object
         }),
       ).timeout(const Duration(seconds: 10));
+      print(response.statusCode);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonMap = jsonDecode(response.body);
         if (jsonMap["code"] == "1") {

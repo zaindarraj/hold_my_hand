@@ -23,7 +23,9 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
       } else if (event is SignUp) {
         emit(Loading());
         dynamic response;
+        print(event.accountType);
         if (event.accountType == 'disabled person') {
+          print("DFD");
           response = await API.signUpUser(event.email, event.password,
               event.fName, event.lName, event.disabilityType as String);
         } else {
@@ -33,11 +35,22 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
             event.fName,
             event.lName,
           );
+          print(response);
         }
         if (response.runtimeType != String) {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          emit(Awaiting());
-        } else {
+          Map<String, dynamic> data = response["data"];
+                    await flutterSecureStorage.setAll(
+                        data["email"], data["password"], "0");
+
+                    String accountType = response["data"]["user_type"];
+                    if (accountType == "1") {
+                      emit(User(data: response["data"]));
+                    } else if (accountType == "2") {
+                      emit(Benefector(data: response["data"]));
+                    }
+                  }
+         else {
           emit(ErrorState(message: response));
         }
       } else if (event is CheckBio) {
@@ -60,14 +73,13 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
                     Map<String, dynamic> data = response["data"];
                     await flutterSecureStorage.setAll(
                         data["email"], data["password"], "0");
-                   
-                    int accountType = response["data"]["user_type"];
-                      if (accountType == 1) {
-                        emit(User(data: response["data"]));
-                      } else if (accountType == 2) {
-                        emit(Benefector(data: response["data"]));
-                      }
-                  
+
+                    String accountType = response["data"]["user_type"];
+                    if (accountType == "1") {
+                      emit(User(data: response["data"]));
+                    } else if (accountType == "2") {
+                      emit(Benefector(data: response["data"]));
+                    }
                   } else {
                     emit(ErrorState(message: response));
                   }
@@ -94,14 +106,15 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
                   map["email"] as String, map["password"] as String);
               if (response.runtimeType != String) {
                 await flutterSecureStorage.setState("0");
-               
-                int accountType = response["data"]["user_type"];
-                  if (accountType == 1) {
-                    emit(User(data: response["data"]));
-                  } else if (accountType == 2) {
-                    emit(Benefector(data: response["data"]));
-                  }
-               
+
+                String accountType = response["data"]["user_type"];
+                print(accountType);
+
+                if (accountType == "1") {
+                  emit(User(data: response["data"]));
+                } else if (accountType == "2") {
+                  emit(Benefector(data: response["data"]));
+                }
               } else {
                 emit(ErrorState(message: response));
               }
@@ -118,14 +131,13 @@ class RegisterationBloc extends Bloc<RegisterationEvent, RegisterationState> {
           emit(ErrorState(message: response));
         } else {
           await flutterSecureStorage.setAll(event.email, event.password, "0");
-          int accountType = response["data"]["user_type"];
-          
-            if (accountType == 1) {
-              emit(User(data: response["data"]));
-            } else if (accountType == 2) {
-              emit(Benefector(data: response["data"]));
-            }
-         
+          String accountType = response["data"]["user_type"];
+          print(accountType);
+          if (accountType == "1") {
+            emit(User(data: response["data"]));
+          } else if (accountType == "2") {
+            emit(Benefector(data: response["data"]));
+          }
         }
       }
     });
